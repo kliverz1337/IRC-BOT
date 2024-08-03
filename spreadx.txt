@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ################################################################
-##                     IRC BOT BY KLIVERZ  			          ##
+##                     IRC BOT BY KLIVERZ  		      ##
 ##             CONTACT : KLIVERZ1337(AT)GMAIL.ID              ##
 ## THANKS TO : JATIMCOM, INDONESIAN CODER, KILL -9 CREW, BKHT ##
 ################################################################
